@@ -11,7 +11,7 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.RecyclerView">
         <activity
-            android:name=".SplashActivity"
+            android:name="com.tiodev.vegtummy.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,20 +19,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SearchActivity"
+            android:name="com.tiodev.vegtummy.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name="com.tiodev.vegtummy.HomeActivity"
             android:exported="true"/>
         <activity
-            android:name=".RecipeActivity"
+            android:name="com.tiodev.vegtummy.RecipeActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.tiodev.vegtummy.MainActivity"
             android:exported="true" />
         <!-- Add the RecipeUploadActivity here -->
         <activity
-            android:name=".RecipeUploadActivity"
+            android:name="com.tiodev.vegtummy.RecipeUploadActivity"
             android:exported="true"/> <!-- Adjust the exported attribute as needed -->
 
         <meta-data

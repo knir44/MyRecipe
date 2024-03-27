@@ -3,7 +3,6 @@ package com.tiodev.vegtummy;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,13 +11,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.myrecipe.R;
 import com.tiodev.vegtummy.Adapter.AdapterPopular;
-import com.tiodev.vegtummy.RoomDB.AppDatabase;
-import com.tiodev.vegtummy.RoomDB.Recipe;
-import com.tiodev.vegtummy.RoomDB.RecipeDao;
+import com.tiodev.vegtummy.Model.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import android.util.Log;
+
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -69,33 +72,29 @@ public class HomeActivity extends AppCompatActivity {
 
 
     public void setPopularList() {
+        // Initialize Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Get database
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                        AppDatabase.class, "recipe.db") // Use "recipe.db" here to match the file name in assets
-                .allowMainThreadQueries() // Caution: It's generally not recommended to allow main thread queries
-                .createFromAsset("database/recipe.db") // This assumes your database file is in the "assets/database" directory
-                .fallbackToDestructiveMigration() // This will clear the database on version mismatch. Use with caution.
-                .build();
-        RecipeDao recipeDao = db.recipeDao();
-
-        // Get all recipes from database
-        List<Recipe> recipes = recipeDao.getAll();
-
-        // Filter Popular category from all recipes
-        for(int i = 0; i<recipes.size(); i++){
-            if(recipes.get(i).getCategory().contains("Popular")){
-                dataPopular.add(recipes.get(i));
-            }
-        }
-
-        // Set popular list to adapter
-        AdapterPopular adapter = new AdapterPopular(dataPopular, getApplicationContext());
-        rcview_home.setAdapter(adapter);
-
-        // Hide progress animation
-        lottie.setVisibility(View.GONE);
-
+        // Fetch recipes marked as 'Popular' from Firestore
+        db.collection("recipes")
+                .whereEqualTo("category", "Popular") // Assuming 'category' is a field in your Firestore documents
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Recipe> popularRecipes = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Recipe recipe = document.toObject(Recipe.class);
+                            popularRecipes.add(recipe);
+                        }
+                        // Now that we have the popular recipes, update the RecyclerView
+                        AdapterPopular adapter = new AdapterPopular(popularRecipes, getApplicationContext());
+                        rcview_home.setAdapter(adapter);
+                        lottie.setVisibility(View.GONE); // Hide the loading animation
+                    } else {
+                        Log.w("Firestore", "Error getting documents: ", task.getException());
+                        lottie.setVisibility(View.GONE); // Hide the loading animation even on failure
+                    }
+                });
     }
 
     // Start MainActivity(Recipe list) with intent message

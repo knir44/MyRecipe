@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/activity_recipe_scene"
-    tools:context="com.example.myrecipe.RecipeActivity">
+    tools:context="com.tiodev.vegtummy.RecipeActivity">
 
     <ImageView
         android:id="@+id/recipe_img"
@@ -84,6 +84,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <ImageView
+            android:id="@+id/selectedImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+
 
         <Button
             android:id="@+id/ing_btn"
@@ -131,7 +138,7 @@
             android:paddingRight="20dp">
 
             <TextView
-                android:id="@+id/ingridients"
+                android:id="@+id/ingredients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

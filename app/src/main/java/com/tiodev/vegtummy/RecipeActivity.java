@@ -1,29 +1,21 @@
 package com.tiodev.vegtummy;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
-
+import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
+import com.example.myrecipe.R; // Ensure this is your correct R class import
 
 import java.util.Objects;
 
 public class RecipeActivity extends AppCompatActivity {
 
-    ImageView img, backBtn, overlay, scroll, zoomImage;
-    TextView txt, ingredients, time, steps;
-    String [] ingList;
-    Button stepBtn, ing_btn;
-    boolean isImgCrop = false;
-    ScrollView scrollView, scrollView_step;
+    private boolean isImgCrop = false;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -31,103 +23,69 @@ public class RecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
 
-        // Find views
-        img = findViewById(R.id.recipe_img);
-        txt = findViewById(R.id.title);
-        ingredients = findViewById(R.id.ingredients);
-        time = findViewById(R.id.time);
-        stepBtn = findViewById(R.id.steps_btn);
-        ing_btn = findViewById(R.id.ing_btn);
-        backBtn = findViewById(R.id.back_btn);
-        steps = findViewById(R.id.steps_txt);
-        scrollView = findViewById(R.id.ing_scroll);
-        scrollView_step = findViewById(R.id.steps);
-        overlay = findViewById(R.id.image_gradient);
-        scroll = findViewById(R.id.scroll);
-        zoomImage = findViewById(R.id.zoom_image);
+        setupViews();
+    }
 
-        // Load recipe image from link
-        Glide.with(getApplicationContext()).load(getIntent().getStringExtra("img"))
-                                                    .into(img);
-        // Set recipe title
+    private void setupViews() {
+        ImageView img = findViewById(R.id.recipe_img);
+        TextView txt = findViewById(R.id.title);
+        TextView ingredients = findViewById(R.id.ingredients);
+        TextView time = findViewById(R.id.time);
+        Button stepBtn = findViewById(R.id.steps_btn);
+        Button ing_btn = findViewById(R.id.ing_btn);
+        ImageView backBtn = findViewById(R.id.back_btn);
+        TextView steps = findViewById(R.id.steps_txt);
+        ScrollView scrollView = findViewById(R.id.ing_scroll);
+        ScrollView scrollView_step = findViewById(R.id.steps);
+        ImageView overlay = findViewById(R.id.image_gradient);
+        ImageView zoomImage = findViewById(R.id.zoom_image);
+
+        Glide.with(getApplicationContext()).load(getIntent().getStringExtra("img")).into(img);
         txt.setText(getIntent().getStringExtra("title"));
 
-        // Set recipe ingredients
-        ingList = Objects.requireNonNull(getIntent().getStringExtra("ingredients")).split("\n");
-        // Set time
+        String[] ingList = Objects.requireNonNull(getIntent().getStringExtra("ingredients")).split("\n");
         time.setText(ingList[0]);
 
-
-        for (int i = 1; i<ingList.length; i++){
-            ingredients.setText(ingredients.getText()+"\uD83D\uDFE2  "+ingList[i]+"\n");
-            /*if(ingList[i].startsWith(" ")){
-                ingredients.setText(ingredients.getText()+"\uD83D\uDFE2  "+ingList[i].trim().replaceAll("\\s{2,}", " ")+"\n");
-            }else{
-
-            }*/
-
+        for (int i = 1; i < ingList.length; i++) {
+            ingredients.append("• " + ingList[i] + "\n");
         }
-        // Set recipe steps
+
         steps.setText(getIntent().getStringExtra("des"));
-       // steps.setText(Html.fromHtml(getIntent().getStringExtra("des")));
 
-        stepBtn.setBackground(null);
+        stepBtn.setOnClickListener(v -> toggleStepView(stepBtn, ing_btn, scrollView, scrollView_step, true));
+        ing_btn.setOnClickListener(v -> toggleStepView(stepBtn, ing_btn, scrollView, scrollView_step, false));
 
-        stepBtn.setOnClickListener(v -> {
+        zoomImage.setOnClickListener(view -> toggleImageScale(img, overlay));
+        backBtn.setOnClickListener(v -> finish());
+    }
+
+    private void toggleStepView(Button stepBtn, Button ing_btn, ScrollView scrollView, ScrollView scrollView_step, boolean showSteps) {
+        if (showSteps) {
             stepBtn.setBackgroundResource(R.drawable.btn_ing);
             stepBtn.setTextColor(getColor(R.color.white));
             ing_btn.setBackground(null);
             ing_btn.setTextColor(getColor(R.color.black));
-
-
             scrollView.setVisibility(View.GONE);
             scrollView_step.setVisibility(View.VISIBLE);
-
-
-
-//            ingredients.setText(getIntent().getStringExtra("des"));
-
-
-        });
-
-        ing_btn.setOnClickListener(v -> {
+        } else {
             ing_btn.setBackgroundResource(R.drawable.btn_ing);
             ing_btn.setTextColor(getColor(R.color.white));
             stepBtn.setBackground(null);
             stepBtn.setTextColor(getColor(R.color.black));
-
             scrollView.setVisibility(View.VISIBLE);
             scrollView_step.setVisibility(View.GONE);
+        }
+    }
 
-        });
-
-
-        // Full recipe image button
-        zoomImage.setOnClickListener(view ->{
-
-            if(!isImgCrop){
-                img.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                overlay.setImageAlpha(0);
-                Glide.with(getApplicationContext()).load(getIntent().getStringExtra("img"))
-                        .into(img);
-                isImgCrop = true;
-
-            }else{
-                img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                overlay.setImageAlpha(255);
-                Glide.with(getApplicationContext()).load(getIntent().getStringExtra("img"))
-                        .into(img);
-                isImgCrop = false;
-
-            }
-
-        });
-
-
-        // Exit activity
-        backBtn.setOnClickListener(v -> finish());
-
-
-
+    private void toggleImageScale(ImageView img, ImageView overlay) {
+        if (!isImgCrop) {
+            img.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            overlay.setImageAlpha(0);
+            isImgCrop = true;
+        } else {
+            img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            overlay.setImageAlpha(255);
+            isImgCrop = false;
+        }
     }
 }

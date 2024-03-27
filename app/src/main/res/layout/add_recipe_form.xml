@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity" >
+    tools:context="com.tiodev.vegtummy.MainActivity" >
 
     <TextView
         android:id="@+id/insertPage"
@@ -27,10 +27,10 @@
         android:hint="Please enter the name of the recipe" />
 
     <EditText
-        android:id="@+id/ingridients"
+        android:id="@+id/ingredients"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Please enter required ingridients" />
+        android:hint="Please enter required ingredients" />
 
     <EditText
         android:id="@+id/description"

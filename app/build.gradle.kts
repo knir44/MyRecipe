@@ -34,6 +34,11 @@ android {
 
 dependencies {
 
+    implementation("com.google.firebase:firebase-firestore:24.11.0") // Check for the latest version
+
+    implementation("com.airbnb.android:lottie:5.2.0") // Use the latest version
+
+
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))

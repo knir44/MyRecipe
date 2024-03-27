@@ -7,22 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-
 import com.bumptech.glide.Glide;
+import com.tiodev.vegtummy.Model.Recipe;
 import com.example.myrecipe.R;
 import com.tiodev.vegtummy.RecipeActivity;
-import com.tiodev.vegtummy.RoomDB.Recipe;
-
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.myviewHolder> {
+public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
-    List<Recipe> data;
-    Context context;
+    private final List<Recipe> data;
+    private final Context context;
 
     public Adapter(List<Recipe> data, Context context) {
         this.data = data;
@@ -31,24 +27,35 @@ public class Adapter extends RecyclerView.Adapter<Adapter.myviewHolder> {
 
     @NonNull
     @Override
-    public myviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_design, parent, false);
-        return new myviewHolder(view);
+        return new ViewHolder(view);
     }
 
+    public void updateRecipes(List<Recipe> newRecipes) {
+        this.data.clear(); // Clear the existing data
+        this.data.addAll(newRecipes); // Add all the new data
+        notifyDataSetChanged(); // Notify the adapter of the change
+    }
+
+
     @Override
-    public void onBindViewHolder(@NonNull myviewHolder holder, int position) {
-        final Recipe temp = data.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Recipe recipe = data.get(position);
 
-        holder.txt1.setText(data.get(position).getTitle());
-        Glide.with(holder.txt1.getContext()).load(data.get(position).getImg()).into(holder.img);
+        holder.title.setText(recipe.getTitle());
+        Glide.with(holder.img.getContext())
+                .load(recipe.getImagePath())
+                .placeholder(R.drawable.category_salad) // Assuming you have a default placeholder image
+                .error(R.drawable.category_salad) // Assuming you have a default error image
+                .into(holder.img);
 
-        holder.img2.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, RecipeActivity.class);
-            intent.putExtra("img", temp.getImg());
-            intent.putExtra("title", temp.getTitle());
-            intent.putExtra("des", temp.getDescription());
-            intent.putExtra("ingredients", temp.getIngredients()); // Ingredients
+            intent.putExtra("img", recipe.getImagePath());
+            intent.putExtra("title", recipe.getTitle());
+            intent.putExtra("des", recipe.getDescription());
+            intent.putExtra("ingredients", recipe.getIngredients());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
@@ -59,15 +66,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.myviewHolder> {
         return data.size();
     }
 
-    static class myviewHolder extends RecyclerView.ViewHolder {
-        ImageView img, img2;
-        TextView txt1;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView img;
+        TextView title;
 
-        public myviewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.img);
-            img2 = itemView.findViewById(R.id.card_btn);
-            txt1 = itemView.findViewById(R.id.txt1);
+            title = itemView.findViewById(R.id.txt1);
         }
     }
 }
