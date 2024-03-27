@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.tiodev.vegtummy.MainActivity" >
+    tools:context="com.tiodev.vegtummy.RecipeUploadActivity" >
 
     <TextView
         android:id="@+id/insertPage"
@@ -45,7 +45,7 @@
 
         <EditText
             android:id="@+id/hours"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
@@ -53,7 +53,7 @@
 
         <EditText
             android:id="@+id/minutes"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
@@ -62,16 +62,23 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Upload photo" />
+    android:id="@+id/uploadPhotoButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Upload photo"
+    />
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Upload recipe" />
+    android:id="@+id/uploadRecipeButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Upload recipe"
+    />
 
+    <ImageView
+        android:id="@+id/selectedImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@android:drawable/ic_menu_gallery" />
 
 </LinearLayout>

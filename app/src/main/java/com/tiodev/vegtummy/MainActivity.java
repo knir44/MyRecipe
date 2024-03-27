@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,9 +20,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recview;
+    Adapter adapter; // Declare the adapter at class level to access it within fetchRecipesFromFirestore()
     List<Recipe> dataFinal = new ArrayList<>();
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,9 +30,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize recyclerView
         recview = findViewById(R.id.recview);
-
-        // Set layout manager to recyclerView
         recview.setLayoutManager(new LinearLayoutManager(this));
+
+        // Initialize adapter with an empty list and set it to recyclerView
+        adapter = new Adapter(new ArrayList<>(), getApplicationContext());
+        recview.setAdapter(adapter);
 
         // Fetch and display recipes from Firestore
         fetchRecipesFromFirestore();
@@ -41,29 +42,35 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchRecipesFromFirestore() {
         String category = getIntent().getStringExtra("Category");
+        if (category == null) {
+            Log.e("MainActivity", "No category specified.");
+            showErrorToast("No category specified. Please try again.");
+            finish();
+            return;
+        }
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("recipes")
                 .whereEqualTo("category", category)
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                    if (task.isSuccessful() && task.getResult() != null) {
                         List<Recipe> recipes = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Recipe recipe = document.toObject(Recipe.class);
                             recipes.add(recipe);
                         }
-                        // Now that we have the recipes, update the RecyclerView
-                        Adapter adapter = new Adapter(recipes, getApplicationContext());
-                        recview.setAdapter(adapter);
+                        // Update the adapter with the fetched recipes
+                        adapter.updateData(recipes);
                     } else {
                         Log.e("MainActivity", "Error fetching documents: ", task.getException());
-                        showErrorToast();
+                        showErrorToast("Failed to load recipes. Please try again later.");
                     }
                 });
     }
 
-    private void showErrorToast() {
-        Toast.makeText(MainActivity.this, "Failed to load recipes. Please try again later.", Toast.LENGTH_LONG).show();
+    // Update the showErrorToast method to accept a message
+    private void showErrorToast(String message) {
+        Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
     }
 }

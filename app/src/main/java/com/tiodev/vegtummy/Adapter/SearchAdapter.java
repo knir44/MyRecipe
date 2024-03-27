@@ -42,8 +42,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         Glide.with(holder.img.getContext())
                 .load(recipe.getImagePath())
-                .placeholder(R.drawable.category_salad) // Ensure you have this drawable resource
-                .error(R.drawable.category_salad) // Ensure you have this drawable resource
+                .placeholder(R.drawable.ic_launcher_foreground) // Use your actual placeholder drawable resource name
+                .error(R.drawable.pizza_sample) // Use your actual error drawable resource name
                 .into(holder.img);
 
         holder.title.setText(recipe.getTitle());
@@ -54,7 +54,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             intent.putExtra("title", recipe.getTitle());
             intent.putExtra("des", recipe.getDescription());
             intent.putExtra("ingredients", recipe.getIngredients());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Consider the navigation context
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
     }

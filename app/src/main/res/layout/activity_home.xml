@@ -189,7 +189,7 @@
 
 
             <ImageView
-                android:id="@+id/Desserts"
+                android:id="@+id/Dessert"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:layout_alignParentTop="true"
@@ -203,10 +203,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/Desserts"
-                android:layout_alignStart="@+id/Desserts"
-                android:layout_alignEnd="@+id/Desserts"
-                android:layout_alignBottom="@id/Desserts"
+                android:layout_below="@+id/Dessert"
+                android:layout_alignStart="@+id/Dessert"
+                android:layout_alignEnd="@+id/Dessert"
+                android:layout_alignBottom="@id/Dessert"
                 android:layout_marginStart="1dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="-1dp"

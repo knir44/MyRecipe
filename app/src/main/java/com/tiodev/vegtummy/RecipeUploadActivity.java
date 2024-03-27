@@ -47,8 +47,8 @@ public class RecipeUploadActivity extends AppCompatActivity {
         description = findViewById(R.id.description);
         hours = findViewById(R.id.hours);
         minutes = findViewById(R.id.minutes);
-        uploadPhotoButton = findViewById(R.id.button2);
-        uploadRecipeButton = findViewById(R.id.button);
+        uploadPhotoButton = findViewById(R.id.uploadPhotoButton);
+        uploadRecipeButton = findViewById(R.id.uploadRecipeButton);
         selectedImage = findViewById(R.id.selectedImage); // Make sure you have an ImageView in your layout
 
         // Populate the spinner with categories from your resources
@@ -71,10 +71,11 @@ public class RecipeUploadActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
-            if (data != null && data.getData() != null) {
-                // Get the image URI and set it to the ImageView
-                selectedImageUri = data.getData();
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            selectedImageUri = data.getData();
+            if (selectedImage == null) {
+                Log.e("RecipeUploadActivity", "selectedImage is null");
+            } else {
                 selectedImage.setImageURI(selectedImageUri);
             }
         }
@@ -102,6 +103,12 @@ public class RecipeUploadActivity extends AppCompatActivity {
             missingFields.setLength(missingFields.length() - 2);
             Toast.makeText(getApplicationContext(), "Missing fields: " + missingFields.toString(), Toast.LENGTH_LONG).show();
             return;
+        }
+
+        if (selectedImage != null && selectedImageUri != null) {
+            selectedImage.setImageURI(selectedImageUri);
+        } else {
+            Log.e("RecipeUploadActivity", "Selected image view or URI is null");
         }
 
         // For the demonstration, the image URI is directly used.

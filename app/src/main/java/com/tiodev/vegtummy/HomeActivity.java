@@ -41,7 +41,7 @@ public class HomeActivity extends AppCompatActivity {
         salad = findViewById(R.id.salad);
         main = findViewById(R.id.MainDish);
         drinks = findViewById(R.id.Drinks);
-        dessert = findViewById(R.id.Desserts);
+        dessert = findViewById(R.id.Dessert);
         rcview_home = findViewById(R.id.rcview_popular);
         lottie = findViewById(R.id.lottie);
         editText = findViewById(R.id.editText);
@@ -50,13 +50,17 @@ public class HomeActivity extends AppCompatActivity {
         // Set layout to recyclerView
         rcview_home.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
+        //Initialize the adapter with an empty list
+        AdapterPopular adapter = new AdapterPopular(new ArrayList<>(), getApplicationContext());
+        rcview_home.setAdapter(adapter);
+
 
         // Set Popular recipes
         setPopularList();
 
         // Category buttons- start new activity with intent method "start"
         salad.setOnClickListener(v -> start("Salad","Salad"));
-        main.setOnClickListener(v -> start("Dish", "Main dish"));
+        main.setOnClickListener(v -> start("Dish", "Main Dish"));
         drinks.setOnClickListener(v -> start("Drinks", "Drinks"));
         dessert.setOnClickListener(v -> start("Desserts", "Dessert"));
 

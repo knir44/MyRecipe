@@ -1,5 +1,6 @@
 package com.tiodev.vegtummy.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -31,6 +32,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_design, parent, false);
         return new ViewHolder(view);
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateData(List<Recipe> newRecipes) {
+        this.data.clear(); // Clear the existing data
+        this.data.addAll(newRecipes); // Add all new data
+        notifyDataSetChanged(); // Notify the adapter that the data set has changed
+    }
+
 
     public void updateRecipes(List<Recipe> newRecipes) {
         this.data.clear(); // Clear the existing data

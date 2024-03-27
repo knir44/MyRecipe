@@ -2,6 +2,7 @@ package com.tiodev.vegtummy;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -40,7 +41,12 @@ public class RecipeActivity extends AppCompatActivity {
         ImageView overlay = findViewById(R.id.image_gradient);
         ImageView zoomImage = findViewById(R.id.zoom_image);
 
-        Glide.with(getApplicationContext()).load(getIntent().getStringExtra("img")).into(img);
+        if (getIntent().hasExtra("img")) {
+            String imageUrl = getIntent().getStringExtra("img");
+            Glide.with(this).load(imageUrl).into(img);
+        } else {
+            // Handle missing data
+        }
         txt.setText(getIntent().getStringExtra("title"));
 
         String[] ingList = Objects.requireNonNull(getIntent().getStringExtra("ingredients")).split("\n");
@@ -56,7 +62,10 @@ public class RecipeActivity extends AppCompatActivity {
         ing_btn.setOnClickListener(v -> toggleStepView(stepBtn, ing_btn, scrollView, scrollView_step, false));
 
         zoomImage.setOnClickListener(view -> toggleImageScale(img, overlay));
-        backBtn.setOnClickListener(v -> finish());
+        backBtn.setOnClickListener(v -> {
+            Log.d("RecipeActivity", "Back button clicked");
+            finish();
+        });
     }
 
     private void toggleStepView(Button stepBtn, Button ing_btn, ScrollView scrollView, ScrollView scrollView_step, boolean showSteps) {
