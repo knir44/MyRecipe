@@ -1,6 +1,6 @@
 package com.tiodev.vegtummy.Model;
 
-import android.util.Log;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
@@ -28,8 +28,8 @@ public class Recipe {
     }
 
     // Getters and setters for all fields
-    public String getImagePath() {
-        return imagePath;
+    public Uri getImagePath() {
+        return Uri.parse(this.imagePath);
     }
 
     public void setImagePath(String imagePath) {

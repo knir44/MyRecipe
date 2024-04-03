@@ -27,6 +27,7 @@ public class RecipeActivity extends AppCompatActivity {
         setupViews();
     }
 
+    @SuppressLint("SetTextI18n")
     private void setupViews() {
         ImageView img = findViewById(R.id.recipe_img);
         ImageView backBtn = findViewById(R.id.back_btn);
@@ -59,9 +60,9 @@ public class RecipeActivity extends AppCompatActivity {
         String[] ingList = Objects.requireNonNull(getIntent().getStringExtra("ingredients")).split("\n");
 
         // Set the time
-        Long cookingTime = getIntent().getLongExtra("cookingTime", -1);
+        long cookingTime = getIntent().getLongExtra("cookingTime", -1);
         if(cookingTime != -1) {
-            time.setText(String.valueOf(cookingTime) + " mins");
+            time.setText(cookingTime + " minutes");
         } else {
             time.setText("N/A"); // Or handle the error as you see fit
         }

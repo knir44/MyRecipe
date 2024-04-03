@@ -1,10 +1,17 @@
 package com.tiodev.vegtummy;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,18 +31,46 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recview;
     Adapter adapter;
 
+    // Registering an ActivityResultLauncher for the "All Files Access" permission
+    private final ActivityResultLauncher<Intent> manageAllFilesAccessLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !android.os.Environment.isExternalStorageManager()) {
+                            Toast.makeText(MainActivity.this, "Access to all files is not granted.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Permission granted, or not needed (below Android 11)
+                            initializeUI();
+                        }
+                    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!android.os.Environment.isExternalStorageManager()) {
+                // Launching the "Manage All Files Access" settings
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.setData(Uri.parse("package:" + getPackageName()));
+                manageAllFilesAccessLauncher.launch(intent);
+            } else {
+                // All Files Access already granted
+                initializeUI();
+            }
+        } else {
+            // For Android 10 and below, where this permission isn't applicable
+            initializeUI();
+        }
+    }
+
+    private void initializeUI() {
         // Initialize recyclerView
         recview = findViewById(R.id.recview);
         recview.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize adapter with an empty list and set it to recyclerView
-        adapter = new Adapter(new ArrayList<>(), getApplicationContext());
+        adapter = new Adapter(new ArrayList<>(), this); // Use 'this' for the context to avoid potential issues
         recview.setAdapter(adapter);
 
         // set title from the intent
@@ -47,10 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set back button
         ImageView backButton = findViewById(R.id.imageView2);
-        backButton.setOnClickListener(v -> {
-            // This will finish the current activity and take you back to the previous one
-            finish();
-        });
+        backButton.setOnClickListener(v -> finish());
 
         // Fetch and display recipes from Firestore
         fetchRecipesFromFirestore();
