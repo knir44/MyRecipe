@@ -71,7 +71,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         // Open add recipe activity
-        addRecipe.setOnClickListener(v -> addRecipe());
+        addRecipe.setOnClickListener(v -> addRecipe(v));
     }
 
 
@@ -109,7 +109,7 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void addRecipe() {
+    public void addRecipe(View view) {
         Intent intent = new Intent(HomeActivity.this, RecipeUploadActivity.class);
         startActivity(intent);
     }
