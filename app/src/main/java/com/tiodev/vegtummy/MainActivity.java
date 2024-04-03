@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.myrecipe.R;
@@ -13,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.tiodev.vegtummy.Adapter.Adapter;
 import com.tiodev.vegtummy.Model.Recipe;
+import com.tiodev.vegtummy.inventory.Data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,12 @@ public class MainActivity extends AppCompatActivity {
     Adapter adapter; // Declare the adapter at class level to access it within fetchRecipesFromFirestore()
     List<Recipe> dataFinal = new ArrayList<>();
 
+    private Spinner spinnerCategory;
+
+    private  CategoryAdapter  categoryAdapter;
+
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
         // Initialize adapter with an empty list and set it to recyclerView
         adapter = new Adapter(new ArrayList<>(), getApplicationContext());
         recview.setAdapter(adapter);
+
+        spinnerCategory = findViewById(R.id.category);
+        categoryAdapter = new CategoryAdapter(MainActivity.this, Data.getCategoryList());
+        spinnerCategory.setAdapter(categoryAdapter);
 
         // Fetch and display recipes from Firestore
         fetchRecipesFromFirestore();
