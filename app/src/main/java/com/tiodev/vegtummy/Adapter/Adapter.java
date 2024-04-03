@@ -41,6 +41,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     public void updateRecipes(List<Recipe> newRecipes) {
         this.data.clear(); // Clear the existing data
         this.data.addAll(newRecipes); // Add all the new data
@@ -48,6 +49,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Recipe recipe = data.get(position);
@@ -58,6 +60,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 .placeholder(R.drawable.category_salad)
                 .error(R.drawable.category_salad)
                 .into(holder.img);
+
+        holder.time.setText(recipe.getCookingTime() + " minutes");
+        holder.img.setImageURI(recipe.getImagePath());
+
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, RecipeActivity.class);
@@ -80,10 +86,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         ImageView img;
         TextView title;
 
+        TextView time;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.img);
             title = itemView.findViewById(R.id.txt1);
+            time = itemView.findViewById(R.id.time);
         }
     }
 }

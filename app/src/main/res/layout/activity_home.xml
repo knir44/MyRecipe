@@ -270,7 +270,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.016"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/add_recipe" />
+        app:srcCompat="@drawable/add_recipe"
+        tools:ignore="OnClick" />
 
     <TextView
         android:id="@+id/add_recipe_text_view"
