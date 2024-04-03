@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,7 +47,7 @@ public class RecipeUploadActivity extends AppCompatActivity {
         minutes = findViewById(R.id.minutes);
         uploadPhotoButton = findViewById(R.id.uploadPhotoButton);
         uploadRecipeButton = findViewById(R.id.uploadRecipeButton);
-        selectedImage = findViewById(R.id.selectedImage); // Make sure you have an ImageView in your layout
+        selectedImage = findViewById(R.id.selectedImage);
 
         // Populate the spinner with categories from your resources
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -105,6 +103,7 @@ public class RecipeUploadActivity extends AppCompatActivity {
             return;
         }
 
+        // Check if image has been uploaded
         if (selectedImage != null && selectedImageUri != null) {
             selectedImage.setImageURI(selectedImageUri);
         } else {
@@ -133,10 +132,17 @@ public class RecipeUploadActivity extends AppCompatActivity {
                 });
     }
 
-    private int calculateCookingTime(String hours, String minutes) {
-        int hoursToMinutes = hours.isEmpty() ? 0 : Integer.parseInt(hours) * 60;
-        int minutesToInt = minutes.isEmpty() ? 0 : Integer.parseInt(minutes);
-        return hoursToMinutes + minutesToInt;
+    private Long calculateCookingTime(String hours, String minutes) {
+        try{
+            int hoursToMinutes = hours.isEmpty() ? 0 : Integer.parseInt(hours) * 60;
+            int minutesToInt = minutes.isEmpty() ? 0 : Integer.parseInt(minutes);
+            int cookingTime = hoursToMinutes + minutesToInt;
+            return (long) cookingTime;
+        }
+        catch (Exception e){
+            Log.e("RecipeActivity", "Failed to parse cooking time");
+            return null;
+        }
     }
 
     private void navigateBackHome() {

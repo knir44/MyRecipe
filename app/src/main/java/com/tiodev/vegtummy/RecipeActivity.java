@@ -29,28 +29,43 @@ public class RecipeActivity extends AppCompatActivity {
 
     private void setupViews() {
         ImageView img = findViewById(R.id.recipe_img);
-        TextView txt = findViewById(R.id.title);
-        TextView ingredients = findViewById(R.id.ingredients);
-        TextView time = findViewById(R.id.time);
-        Button stepBtn = findViewById(R.id.steps_btn);
-        Button ing_btn = findViewById(R.id.ing_btn);
         ImageView backBtn = findViewById(R.id.back_btn);
-        TextView steps = findViewById(R.id.steps_txt);
-        ScrollView scrollView = findViewById(R.id.ing_scroll);
-        ScrollView scrollView_step = findViewById(R.id.steps);
         ImageView overlay = findViewById(R.id.image_gradient);
         ImageView zoomImage = findViewById(R.id.zoom_image);
 
+        TextView title = findViewById(R.id.title);
+        TextView ingredients = findViewById(R.id.ingredients);
+        TextView time = findViewById(R.id.time);
+        TextView steps = findViewById(R.id.steps_txt);
+
+        Button stepBtn = findViewById(R.id.steps_btn);
+        Button ingBtn = findViewById(R.id.ing_btn);
+
+        ScrollView scrollView = findViewById(R.id.ing_scroll);
+        ScrollView scrollView_step = findViewById(R.id.steps);
+
+        // Check if there is an image to this recipe, and if so load it
         if (getIntent().hasExtra("img")) {
             String imageUrl = getIntent().getStringExtra("img");
             Glide.with(this).load(imageUrl).into(img);
         } else {
             // Handle missing data
         }
-        txt.setText(getIntent().getStringExtra("title"));
 
+        // Set the title for this recipe
+        title.setText(getIntent().getStringExtra("title"));
+
+        // Set the ingredients
         String[] ingList = Objects.requireNonNull(getIntent().getStringExtra("ingredients")).split("\n");
-        time.setText(ingList[0]);
+
+        // Set the time
+        Long cookingTime = getIntent().getLongExtra("cookingTime", -1);
+        if(cookingTime != -1) {
+            time.setText(String.valueOf(cookingTime) + " mins");
+        } else {
+            time.setText("N/A"); // Or handle the error as you see fit
+        }
+
 
         for (int i = 1; i < ingList.length; i++) {
             ingredients.append("• " + ingList[i] + "\n");
@@ -58,8 +73,8 @@ public class RecipeActivity extends AppCompatActivity {
 
         steps.setText(getIntent().getStringExtra("des"));
 
-        stepBtn.setOnClickListener(v -> toggleStepView(stepBtn, ing_btn, scrollView, scrollView_step, true));
-        ing_btn.setOnClickListener(v -> toggleStepView(stepBtn, ing_btn, scrollView, scrollView_step, false));
+        stepBtn.setOnClickListener(v -> toggleStepView(stepBtn, ingBtn, scrollView, scrollView_step, true));
+        ingBtn.setOnClickListener(v -> toggleStepView(stepBtn, ingBtn, scrollView, scrollView_step, false));
 
         zoomImage.setOnClickListener(view -> toggleImageScale(img, overlay));
         backBtn.setOnClickListener(v -> {
