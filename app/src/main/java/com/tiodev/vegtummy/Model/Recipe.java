@@ -1,5 +1,9 @@
 package com.tiodev.vegtummy.Model;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 public class Recipe {
     // Assuming these are the fields you have in your Recipe class
     private String imagePath;
@@ -7,14 +11,14 @@ public class Recipe {
     private String description;
     private String ingredients;
     private String category;
-    private int cookingTime; // or String, depending on how you want to handle this
+    private Long cookingTime;
 
     // No-argument constructor for Firebase
     public Recipe() {
     }
 
     // Constructor with arguments
-    public Recipe(String imagePath, String title, String description, String ingredients, String category, int cookingTime) {
+    public Recipe(String imagePath, String title, String description, String ingredients, String category, Long cookingTime) {
         this.imagePath = imagePath;
         this.title = title;
         this.description = description;
@@ -64,11 +68,21 @@ public class Recipe {
         this.category = category;
     }
 
-    public int getCookingTime() {
-        return cookingTime;
+    @NonNull
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                // Other fields...
+                "cookingTime=" + cookingTime +
+                '}';
     }
 
-    public void setCookingTime(int cookingTime) {
+    public Long getCookingTime() {
+        return this.cookingTime;
+    }
+
+
+    public void setCookingTime(Long cookingTime) {
         this.cookingTime = cookingTime;
     }
 }

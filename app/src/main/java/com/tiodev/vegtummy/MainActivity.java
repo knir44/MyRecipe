@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myrecipe.R;
@@ -20,8 +22,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recview;
-    Adapter adapter; // Declare the adapter at class level to access it within fetchRecipesFromFirestore()
-    List<Recipe> dataFinal = new ArrayList<>();
+    Adapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +38,28 @@ public class MainActivity extends AppCompatActivity {
         adapter = new Adapter(new ArrayList<>(), getApplicationContext());
         recview.setAdapter(adapter);
 
+        // set title from the intent
+        TextView titleTextView = findViewById(R.id.title);
+        String title = getIntent().getStringExtra("title");
+        if (title != null && !title.isEmpty()) {
+            titleTextView.setText(title);
+        }
+
+        // Set back button
+        ImageView backButton = findViewById(R.id.imageView2);
+        backButton.setOnClickListener(v -> {
+            // This will finish the current activity and take you back to the previous one
+            finish();
+        });
+
         // Fetch and display recipes from Firestore
         fetchRecipesFromFirestore();
     }
 
     private void fetchRecipesFromFirestore() {
+        // Get the current category based on the page im currently in
         String category = getIntent().getStringExtra("Category");
+        // if there is no category just display an error message and exit
         if (category == null) {
             Log.e("MainActivity", "No category specified.");
             showErrorToast("No category specified. Please try again.");
@@ -55,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
+                        // Get all the recipes from a certain category
                         List<Recipe> recipes = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Recipe recipe = document.toObject(Recipe.class);

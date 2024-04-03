@@ -55,8 +55,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         holder.title.setText(recipe.getTitle());
         Glide.with(holder.img.getContext())
                 .load(recipe.getImagePath())
-                .placeholder(R.drawable.category_salad) // Assuming you have a default placeholder image
-                .error(R.drawable.category_salad) // Assuming you have a default error image
+                .placeholder(R.drawable.category_salad)
+                .error(R.drawable.category_salad)
                 .into(holder.img);
 
         holder.itemView.setOnClickListener(v -> {
@@ -65,6 +65,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             intent.putExtra("title", recipe.getTitle());
             intent.putExtra("des", recipe.getDescription());
             intent.putExtra("ingredients", recipe.getIngredients());
+            intent.putExtra("cookingTime", recipe.getCookingTime());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });

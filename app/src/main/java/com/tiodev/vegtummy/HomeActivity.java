@@ -23,13 +23,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import android.util.Log;
 
 
-
 public class HomeActivity extends AppCompatActivity {
 
     ImageView salad, main, drinks, dessert, addRecipe;
     RecyclerView rcview_home;
-    List<Recipe> dataPopular = new ArrayList<>();
     LottieAnimationView lottie;
+    AdapterPopular adapterPopular;
     EditText editText;
 
     @Override
@@ -54,15 +53,14 @@ public class HomeActivity extends AppCompatActivity {
         AdapterPopular adapter = new AdapterPopular(new ArrayList<>(), getApplicationContext());
         rcview_home.setAdapter(adapter);
 
-
         // Set Popular recipes
         setPopularList();
 
         // Category buttons- start new activity with intent method "start"
         salad.setOnClickListener(v -> start("Salad","Salad"));
-        main.setOnClickListener(v -> start("Dish", "Main Dish"));
+        main.setOnClickListener(v -> start("Main Dish", "Main Dish"));
         drinks.setOnClickListener(v -> start("Drinks", "Drinks"));
-        dessert.setOnClickListener(v -> start("Desserts", "Dessert"));
+        dessert.setOnClickListener(v -> start("Dessert", "Dessert"));
 
         // Open search activity
         editText.setOnClickListener(v ->{
@@ -81,7 +79,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Fetch recipes marked as 'Popular' from Firestore
         db.collection("recipes")
-                .whereEqualTo("category", "Popular") // Assuming 'category' is a field in your Firestore documents
+                .whereEqualTo("category", "Popular")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -91,8 +89,8 @@ public class HomeActivity extends AppCompatActivity {
                             popularRecipes.add(recipe);
                         }
                         // Now that we have the popular recipes, update the RecyclerView
-                        AdapterPopular adapter = new AdapterPopular(popularRecipes, getApplicationContext());
-                        rcview_home.setAdapter(adapter);
+                        adapterPopular = new AdapterPopular(popularRecipes, getApplicationContext());
+                        rcview_home.setAdapter(adapterPopular);
                         lottie.setVisibility(View.GONE); // Hide the loading animation
                     } else {
                         Log.w("Firestore", "Error getting documents: ", task.getException());
@@ -102,9 +100,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     // Start MainActivity(Recipe list) with intent message
-    public void start(String p, String title){
+    public void start(String category, String title){
         Intent intent = new Intent(HomeActivity.this,MainActivity.class);
-        intent.putExtra("Category", p);
+        intent.putExtra("Category", category);
         intent.putExtra("title", title);
         startActivity(intent);
     }
