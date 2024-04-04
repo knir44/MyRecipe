@@ -13,7 +13,7 @@ public class Recipe {
     private String category;
     private Long cookingTime;
 
-    // No-argument constructor for Firebase
+    // No-argument constructor for Firebase - must
     public Recipe() {
     }
 
@@ -32,9 +32,7 @@ public class Recipe {
         return Uri.parse(this.imagePath);
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
+    public Long getCookingTime() { return this.cookingTime; }
 
     public String getTitle() {
         return title;
@@ -48,25 +46,14 @@ public class Recipe {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getIngredients() {
         return ingredients;
-    }
-
-    public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
     }
 
     public String getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
 
     @NonNull
     @Override
@@ -77,12 +64,5 @@ public class Recipe {
                 '}';
     }
 
-    public Long getCookingTime() {
-        return this.cookingTime;
-    }
 
-
-    public void setCookingTime(Long cookingTime) {
-        this.cookingTime = cookingTime;
-    }
 }

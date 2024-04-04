@@ -41,7 +41,7 @@ public class RecipeUploadActivity extends AppCompatActivity {
     private void initializeUI() {
         category = findViewById(R.id.category);
         title = findViewById(R.id.title);
-        ingredients = findViewById(R.id.ingredients);
+        ingredients = findViewById(R.id.ingredients_txt);
         description = findViewById(R.id.description);
         hours = findViewById(R.id.hours);
         minutes = findViewById(R.id.minutes);

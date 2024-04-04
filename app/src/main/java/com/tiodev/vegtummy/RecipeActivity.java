@@ -2,7 +2,6 @@ package com.tiodev.vegtummy;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.myrecipe.R; // Ensure this is your correct R class import
 
-import java.util.Objects;
 
 public class RecipeActivity extends AppCompatActivity {
 
@@ -29,13 +27,14 @@ public class RecipeActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void setupViews() {
+        // Initializing components
         ImageView img = findViewById(R.id.recipe_img);
         ImageView backBtn = findViewById(R.id.back_btn);
         ImageView overlay = findViewById(R.id.image_gradient);
         ImageView zoomImage = findViewById(R.id.zoom_image);
 
         TextView title = findViewById(R.id.title);
-        TextView ingredients = findViewById(R.id.ingredients);
+        TextView ingredients = findViewById(R.id.ingredients_txt);
         TextView time = findViewById(R.id.time);
         TextView steps = findViewById(R.id.steps_txt);
 
@@ -46,44 +45,42 @@ public class RecipeActivity extends AppCompatActivity {
         ScrollView scrollView_step = findViewById(R.id.steps);
 
         // Check if there is an image to this recipe, and if so load it
+        // TODO: image not showing up
         if (getIntent().hasExtra("img")) {
             String imageUrl = getIntent().getStringExtra("img");
             Glide.with(this).load(imageUrl).into(img);
         } else {
-            // Handle missing data
+            //TODO: in case there is no image uploaded, select a default image based on the category.
+
         }
 
         // Set the title for this recipe
         title.setText(getIntent().getStringExtra("title"));
 
         // Set the ingredients
-        String[] ingList = Objects.requireNonNull(getIntent().getStringExtra("ingredients")).split("\n");
+        ingredients.setText(getIntent().getStringExtra("ingredients"));
 
         // Set the time
         long cookingTime = getIntent().getLongExtra("cookingTime", -1);
         if(cookingTime != -1) {
             time.setText(cookingTime + " minutes");
         } else {
-            time.setText("N/A"); // Or handle the error as you see fit
+            time.setText("N/A");
         }
 
+        // Set the instructions for the recipe
+        steps.setText(getIntent().getStringExtra("description"));
 
-        for (int i = 1; i < ingList.length; i++) {
-            ingredients.append("• " + ingList[i] + "\n");
-        }
-
-        steps.setText(getIntent().getStringExtra("des"));
-
+        // Add event listeners
         stepBtn.setOnClickListener(v -> toggleStepView(stepBtn, ingBtn, scrollView, scrollView_step, true));
         ingBtn.setOnClickListener(v -> toggleStepView(stepBtn, ingBtn, scrollView, scrollView_step, false));
-
         zoomImage.setOnClickListener(view -> toggleImageScale(img, overlay));
         backBtn.setOnClickListener(v -> {
-            Log.d("RecipeActivity", "Back button clicked");
             finish();
         });
     }
 
+    // TODO: when starting the app, both buttons are selected
     private void toggleStepView(Button stepBtn, Button ing_btn, ScrollView scrollView, ScrollView scrollView_step, boolean showSteps) {
         if (showSteps) {
             stepBtn.setBackgroundResource(R.drawable.btn_ing);
