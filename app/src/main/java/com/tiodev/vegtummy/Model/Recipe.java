@@ -38,10 +38,6 @@ public class Recipe {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -54,6 +50,19 @@ public class Recipe {
         return category;
     }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setTitle(String title) { this.title = title; }
+
+    public void setImagePath(String path) {this.imagePath = path;}
+
+    public void setCookingTime(Long time) {this.cookingTime = time;}
+
+    public void setDescription(String description) {this.description = description;}
+
+    public  void setIngredients(String ingredients) {this.ingredients = ingredients;}
 
     @NonNull
     @Override

@@ -3,6 +3,7 @@ package com.tiodev.vegtummy.Adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,25 +63,40 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         holder.time.setText(recipe.getCookingTime() + " minutes");
 
         // Set image
-        // TODO: change default image by category
-        holder.img.setImageURI(recipe.getImagePath());
+        int placeholderImage = getPlaceholderImage(recipe.getCategory());
         Glide.with(holder.img.getContext())
                 .load(recipe.getImagePath())
-                .placeholder(R.drawable.category_salad)
-                .error(R.drawable.category_salad)
+                .placeholder(placeholderImage)
+                .error(placeholderImage)
                 .into(holder.img);
 
         // Add event listeners
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, RecipeActivity.class);
-            intent.putExtra("img", recipe.getImagePath());
             intent.putExtra("title", recipe.getTitle());
+            intent.putExtra("img", recipe.getImagePath().toString());
             intent.putExtra("description", recipe.getDescription());
             intent.putExtra("ingredients", recipe.getIngredients());
             intent.putExtra("cookingTime", recipe.getCookingTime());
+            intent.putExtra("category", recipe.getCategory());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
+    }
+
+    private int getPlaceholderImage(String category) {
+        switch (category) {
+            case "Salad":
+                return R.drawable.category_salad;
+            case "Main Dish":
+                return R.drawable.category_main;
+            case "Drinks":
+                return R.drawable.catergory_drinks;
+            case "Dessert":
+                return R.drawable.category_dessert;
+            default:
+                return R.drawable.default_placeholder;
+        }
     }
 
     @Override

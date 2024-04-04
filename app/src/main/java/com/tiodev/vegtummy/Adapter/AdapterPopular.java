@@ -33,6 +33,7 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.MyViewHo
         return new MyViewHolder(view);
     }
 
+    // TODO: adjust default placeholder for popular recipes
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final Recipe recipe = data.get(position);
