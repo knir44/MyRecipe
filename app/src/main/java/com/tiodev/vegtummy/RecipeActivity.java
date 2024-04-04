@@ -16,9 +16,6 @@ import com.tiodev.vegtummy.Model.Recipe;
 
 
 public class RecipeActivity extends AppCompatActivity {
-
-    private boolean isImgCrop = false;
-
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +30,6 @@ public class RecipeActivity extends AppCompatActivity {
         // Initializing components
         ImageView img = findViewById(R.id.recipe_img);
         ImageView backBtn = findViewById(R.id.back_btn);
-        ImageView overlay = findViewById(R.id.image_gradient);
-        ImageView zoomImage = findViewById(R.id.zoom_image);
 
         TextView title = findViewById(R.id.title);
         TextView ingredients = findViewById(R.id.ingredients_txt);
@@ -47,6 +42,7 @@ public class RecipeActivity extends AppCompatActivity {
         ScrollView scrollView = findViewById(R.id.ing_scroll);
         ScrollView scrollView_step = findViewById(R.id.steps);
 
+        // Set the ingBtn as the selected default
         ingBtn.setBackgroundResource(R.drawable.btn_ing);
         ingBtn.setTextColor(getColor(R.color.white));
         stepBtn.setBackground(null);
@@ -81,15 +77,12 @@ public class RecipeActivity extends AppCompatActivity {
         // Add event listeners
         stepBtn.setOnClickListener(v -> toggleStepView(stepBtn, ingBtn, scrollView, scrollView_step, true));
         ingBtn.setOnClickListener(v -> toggleStepView(stepBtn, ingBtn, scrollView, scrollView_step, false));
-        zoomImage.setOnClickListener(view -> toggleImageScale(img, overlay));
-        backBtn.setOnClickListener(v -> {
-            finish();
-        });
+        backBtn.setOnClickListener(v -> finish());
     }
 
     private int getPlaceholderImage(String category) {
         if (category == null) {
-            return R.drawable.default_placeholder; // A default image for when no category is specified
+            return R.drawable.default_placeholder;
         }
         switch (category) {
             case "Salad":
@@ -100,8 +93,10 @@ public class RecipeActivity extends AppCompatActivity {
                 return R.drawable.catergory_drinks;
             case "Dessert":
                 return R.drawable.category_dessert;
+            case "Popular":
+                return R.drawable.popular_placeholder;
             default:
-                return R.drawable.default_placeholder; // A default image in case the category doesn't match
+                return R.drawable.default_placeholder;
         }
     }
 
@@ -120,18 +115,6 @@ public class RecipeActivity extends AppCompatActivity {
             stepBtn.setTextColor(getColor(R.color.black));
             scrollView.setVisibility(View.VISIBLE);
             scrollView_step.setVisibility(View.GONE);
-        }
-    }
-
-    private void toggleImageScale(ImageView img, ImageView overlay) {
-        if (!isImgCrop) {
-            img.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            overlay.setImageAlpha(0);
-            isImgCrop = true;
-        } else {
-            img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            overlay.setImageAlpha(255);
-            isImgCrop = false;
         }
     }
 }

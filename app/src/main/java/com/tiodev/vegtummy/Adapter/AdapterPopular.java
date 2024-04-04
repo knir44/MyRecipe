@@ -37,28 +37,34 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final Recipe recipe = data.get(position);
+
+        // Display cooking time
         String displayTime = recipe.getCookingTime().toString();
-        holder.cookingTime.setText(displayTime);
         if(displayTime != null && displayTime != ""){
             holder.cookingTime.setText(displayTime + " min");
         } else {
             holder.cookingTime.setText("N/A");
         }
 
+        // Display Image
         Glide.with(holder.img.getContext())
                 .load(recipe.getImagePath())
-                .placeholder(R.drawable.category_main) // Ensure you have this drawable resource
-                .error(R.drawable.category_salad) // Ensure you have this drawable resource
+                .placeholder(R.drawable.popular_placeholder) // Ensure you have this drawable resource
+                .error(R.drawable.popular_placeholder) // Ensure you have this drawable resource
                 .into(holder.img);
+
+        // Set Title
         holder.title.setText(recipe.getTitle());
 
+        // Add event listeners
         holder.img.setOnClickListener(v -> {
             Intent intent = new Intent(context, RecipeActivity.class);
-            intent.putExtra("img", recipe.getImagePath());
             intent.putExtra("title", recipe.getTitle());
+            intent.putExtra("img", recipe.getImagePath().toString());
             intent.putExtra("description", recipe.getDescription());
             intent.putExtra("ingredients", recipe.getIngredients());
             intent.putExtra("cookingTime", recipe.getCookingTime());
+            intent.putExtra("category", recipe.getCategory());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
