@@ -1,17 +1,16 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-
     <!-- Pressed state -->
     <item android:state_pressed="true">
         <layer-list>
             <!-- Background shape -->
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="#FFA726" /> <!-- Orange background color when pressed -->
+                    <solid android:color="#268FFF" /> <!-- Orange background color when pressed -->
                     <corners android:radius="40dp" /> <!-- Rounded corners -->
                 </shape>
             </item>
             <!-- Image -->
-            <item android:drawable="@drawable/add_recipe" android:gravity="center" />
+            <item android:drawable="@drawable/add_recipe_icon" android:gravity="center" />
         </layer-list>
     </item>
 
@@ -21,12 +20,12 @@
             <!-- Background shape -->
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="#FFFFFF" /> <!-- White background color when focused -->
+                    <solid android:color="#B53232" /> <!-- White background color when focused -->
                     <corners android:radius="40dp" /> <!-- Rounded corners -->
                 </shape>
             </item>
             <!-- Image -->
-            <item android:drawable="@drawable/add_recipe" android:gravity="center" />
+            <item android:drawable="@drawable/add_recipe_icon" android:gravity="center" />
         </layer-list>
     </item>
 
@@ -36,12 +35,12 @@
             <!-- Background shape -->
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="#FFFFFF" /> <!-- White background color -->
+                    <solid android:color="#1EA0D5" /> <!-- White background color -->
                     <corners android:radius="40dp" /> <!-- Rounded corners -->
                 </shape>
             </item>
             <!-- Image -->
-            <item android:drawable="@drawable/add_recipe" android:gravity="center" />
+            <item android:drawable="@drawable/add_recipe_icon" android:gravity="center" />
         </layer-list>
     </item>
 
