@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +29,9 @@ public class RecipeUploadActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri selectedImageUri; // To hold the image URI
 
+    private Button clearAll;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +40,33 @@ public class RecipeUploadActivity extends AppCompatActivity {
         // Initialize UI components and set up listeners
         initializeUI();
         setupButtonListeners();
-    }
 
+        clearAll = findViewById(R.id.clear_text);
+        clearAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAll();
+            }
+        });
+    }
+    private void clearAll()
+    {
+        category = findViewById(R.id.category);
+        title = findViewById(R.id.title);
+        ingredients = findViewById(R.id.ingredients);
+        description = findViewById(R.id.description);
+        hours = findViewById(R.id.hours);
+        minutes = findViewById(R.id.minutes);
+        selectedImage = findViewById(R.id.selectedImage);
+
+        category.setSelection(0);
+        title.setText("");
+        ingredients.setText("");
+        description.setText("");
+        hours.setText("");
+        minutes.setText("");
+        selectedImage.setImageResource(android.R.drawable.ic_menu_gallery);
+    }
     private void initializeUI() {
         category = findViewById(R.id.category);
         title = findViewById(R.id.title);

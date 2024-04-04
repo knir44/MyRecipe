@@ -7,13 +7,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recview;
     Adapter adapter;
 
+
     // Registering an ActivityResultLauncher for the "All Files Access" permission
     private final ActivityResultLauncher<Intent> manageAllFilesAccessLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -43,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
