@@ -3,6 +3,7 @@ package com.tiodev.vegtummy.Adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,29 +53,50 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        // Get the current recipe from the data
         Recipe recipe = data.get(position);
 
+        // Set title
         holder.title.setText(recipe.getTitle());
+
+        // Set time
+        holder.time.setText(recipe.getCookingTime() + " minutes");
+
+        // Set image
+        int placeholderImage = getPlaceholderImage(recipe.getCategory());
         Glide.with(holder.img.getContext())
                 .load(recipe.getImagePath())
-                .placeholder(R.drawable.category_salad)
-                .error(R.drawable.category_salad)
+                .placeholder(placeholderImage)
+                .error(placeholderImage)
                 .into(holder.img);
 
-        holder.time.setText(recipe.getCookingTime() + " minutes");
-        holder.img.setImageURI(recipe.getImagePath());
-
-
+        // Add event listeners
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, RecipeActivity.class);
-            intent.putExtra("img", recipe.getImagePath());
             intent.putExtra("title", recipe.getTitle());
-            intent.putExtra("des", recipe.getDescription());
+            intent.putExtra("img", recipe.getImagePath().toString());
+            intent.putExtra("description", recipe.getDescription());
             intent.putExtra("ingredients", recipe.getIngredients());
             intent.putExtra("cookingTime", recipe.getCookingTime());
+            intent.putExtra("category", recipe.getCategory());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
+    }
+
+    private int getPlaceholderImage(String category) {
+        switch (category) {
+            case "Salad":
+                return R.drawable.category_salad;
+            case "Main Dish":
+                return R.drawable.category_main;
+            case "Drinks":
+                return R.drawable.catergory_drinks;
+            case "Dessert":
+                return R.drawable.category_dessert;
+            default:
+                return R.drawable.default_placeholder;
+        }
     }
 
     @Override
@@ -82,16 +104,15 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         return data.size();
     }
 
+    // When showing all the recipes in a category
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
-        TextView title;
-
-        TextView time;
+        TextView title, time;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.img);
-            title = itemView.findViewById(R.id.txt1);
+            title = itemView.findViewById(R.id.itemTitle);
             time = itemView.findViewById(R.id.time);
         }
     }
