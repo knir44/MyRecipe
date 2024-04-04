@@ -46,13 +46,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 .error(R.drawable.pizza_sample) // Use your actual error drawable resource name
                 .into(holder.img);
 
+        // Set title
         holder.title.setText(recipe.getTitle());
 
+        // Add event listeners
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, RecipeActivity.class);
             intent.putExtra("img", recipe.getImagePath());
             intent.putExtra("title", recipe.getTitle());
-            intent.putExtra("des", recipe.getDescription());
+            intent.putExtra("description", recipe.getDescription());
             intent.putExtra("ingredients", recipe.getIngredients());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
@@ -62,13 +64,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return data.size();
-    }
-
-    // This method is updated to replace filterList, for clarity
-    @SuppressLint("NotifyDataSetChanged")
-    public void updateRecipes(List<Recipe> updatedRecipes) {
-        this.data = updatedRecipes;
-        notifyDataSetChanged();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

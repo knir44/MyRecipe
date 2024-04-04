@@ -35,7 +35,7 @@ android {
 dependencies {
 
     implementation("com.google.firebase:firebase-firestore:24.11.0") // Check for the latest version
-
+    implementation("com.squareup.picasso:picasso:2.8")
     implementation("com.airbnb.android:lottie:5.2.0") // Use the latest version
 
 

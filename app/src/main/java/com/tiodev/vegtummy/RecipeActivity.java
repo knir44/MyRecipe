@@ -1,8 +1,8 @@
 package com.tiodev.vegtummy;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,8 +11,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.myrecipe.R; // Ensure this is your correct R class import
+import com.squareup.picasso.Picasso;
+import com.tiodev.vegtummy.Model.Recipe;
 
-import java.util.Objects;
 
 public class RecipeActivity extends AppCompatActivity {
 
@@ -29,13 +30,14 @@ public class RecipeActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void setupViews() {
+        // Initializing components
         ImageView img = findViewById(R.id.recipe_img);
         ImageView backBtn = findViewById(R.id.back_btn);
         ImageView overlay = findViewById(R.id.image_gradient);
         ImageView zoomImage = findViewById(R.id.zoom_image);
 
         TextView title = findViewById(R.id.title);
-        TextView ingredients = findViewById(R.id.ingredients);
+        TextView ingredients = findViewById(R.id.ingredients_txt);
         TextView time = findViewById(R.id.time);
         TextView steps = findViewById(R.id.steps_txt);
 
@@ -45,43 +47,62 @@ public class RecipeActivity extends AppCompatActivity {
         ScrollView scrollView = findViewById(R.id.ing_scroll);
         ScrollView scrollView_step = findViewById(R.id.steps);
 
-        // Check if there is an image to this recipe, and if so load it
-        if (getIntent().hasExtra("img")) {
-            String imageUrl = getIntent().getStringExtra("img");
-            Glide.with(this).load(imageUrl).into(img);
-        } else {
-            // Handle missing data
-        }
+        ingBtn.setBackgroundResource(R.drawable.btn_ing);
+        ingBtn.setTextColor(getColor(R.color.white));
+        stepBtn.setBackground(null);
+        stepBtn.setTextColor(getColor(R.color.black));
 
-        // Set the title for this recipe
+        /* Set the image - if the Uri is invalid or the image cannot be loaded, a placeholder based
+        on the category will be displayed */
+        String category = getIntent().getStringExtra("category");
+        Glide.with(getApplicationContext())
+                .load(Uri.parse(getIntent().getStringExtra("img")))
+                .placeholder(getPlaceholderImage(category))
+                .error(getPlaceholderImage(category))
+                .into(img);
+
+        // Set the title
         title.setText(getIntent().getStringExtra("title"));
 
         // Set the ingredients
-        String[] ingList = Objects.requireNonNull(getIntent().getStringExtra("ingredients")).split("\n");
+        ingredients.setText(getIntent().getStringExtra("ingredients"));
 
         // Set the time
         long cookingTime = getIntent().getLongExtra("cookingTime", -1);
         if(cookingTime != -1) {
             time.setText(cookingTime + " minutes");
         } else {
-            time.setText("N/A"); // Or handle the error as you see fit
+            time.setText("N/A");
         }
 
+        // Set the instructions for the recipe
+        steps.setText(getIntent().getStringExtra("description"));
 
-        for (int i = 1; i < ingList.length; i++) {
-            ingredients.append("• " + ingList[i] + "\n");
-        }
-
-        steps.setText(getIntent().getStringExtra("des"));
-
+        // Add event listeners
         stepBtn.setOnClickListener(v -> toggleStepView(stepBtn, ingBtn, scrollView, scrollView_step, true));
         ingBtn.setOnClickListener(v -> toggleStepView(stepBtn, ingBtn, scrollView, scrollView_step, false));
-
         zoomImage.setOnClickListener(view -> toggleImageScale(img, overlay));
         backBtn.setOnClickListener(v -> {
-            Log.d("RecipeActivity", "Back button clicked");
             finish();
         });
+    }
+
+    private int getPlaceholderImage(String category) {
+        if (category == null) {
+            return R.drawable.default_placeholder; // A default image for when no category is specified
+        }
+        switch (category) {
+            case "Salad":
+                return R.drawable.category_salad;
+            case "Main Dish":
+                return R.drawable.category_main;
+            case "Drinks":
+                return R.drawable.catergory_drinks;
+            case "Dessert":
+                return R.drawable.category_dessert;
+            default:
+                return R.drawable.default_placeholder; // A default image in case the category doesn't match
+        }
     }
 
     private void toggleStepView(Button stepBtn, Button ing_btn, ScrollView scrollView, ScrollView scrollView_step, boolean showSteps) {

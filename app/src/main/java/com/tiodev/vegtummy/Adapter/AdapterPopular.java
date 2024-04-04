@@ -33,27 +33,32 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.MyViewHo
         return new MyViewHolder(view);
     }
 
+    // TODO: adjust default placeholder for popular recipes
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        final Recipe temp = data.get(position);
-
-        String[] time = temp.getIngredients().split("\n", 2); // Ensure there's a newline to split
-        String displayTime = time.length > 0 ? "\uD83D\uDD50 " + time[0] : "No Time Set";
-        holder.txt2.setText(displayTime);
+        final Recipe recipe = data.get(position);
+        String displayTime = recipe.getCookingTime().toString();
+        holder.cookingTime.setText(displayTime);
+        if(displayTime != null && displayTime != ""){
+            holder.cookingTime.setText(displayTime + " min");
+        } else {
+            holder.cookingTime.setText("N/A");
+        }
 
         Glide.with(holder.img.getContext())
-                .load(temp.getImagePath())
+                .load(recipe.getImagePath())
                 .placeholder(R.drawable.category_main) // Ensure you have this drawable resource
                 .error(R.drawable.category_salad) // Ensure you have this drawable resource
                 .into(holder.img);
-        holder.txt.setText(temp.getTitle());
+        holder.title.setText(recipe.getTitle());
 
         holder.img.setOnClickListener(v -> {
             Intent intent = new Intent(context, RecipeActivity.class);
-            intent.putExtra("img", temp.getImagePath());
-            intent.putExtra("title", temp.getTitle());
-            intent.putExtra("des", temp.getDescription());
-            intent.putExtra("ingredients", temp.getIngredients());
+            intent.putExtra("img", recipe.getImagePath());
+            intent.putExtra("title", recipe.getTitle());
+            intent.putExtra("description", recipe.getDescription());
+            intent.putExtra("ingredients", recipe.getIngredients());
+            intent.putExtra("cookingTime", recipe.getCookingTime());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
@@ -66,13 +71,13 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.MyViewHo
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
-        TextView txt, txt2;
+        TextView title, cookingTime;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.popular_img);
-            txt = itemView.findViewById(R.id.popular_txt);
-            txt2 = itemView.findViewById(R.id.popular_time);
+            title = itemView.findViewById(R.id.popular_txt);
+            cookingTime = itemView.findViewById(R.id.popular_time);
         }
     }
 }

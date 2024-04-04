@@ -27,7 +27,7 @@
         android:hint="Please enter the name of the recipe" />
 
     <EditText
-        android:id="@+id/ingredients"
+        android:id="@+id/ingredients_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Please enter required ingredients" />
