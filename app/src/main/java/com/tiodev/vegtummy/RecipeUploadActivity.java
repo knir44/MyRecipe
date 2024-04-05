@@ -29,7 +29,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.example.myrecipe.R;
-import com.google.firebase.database.collection.BuildConfig;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -43,33 +42,24 @@ import java.util.UUID;
 
 public class RecipeUploadActivity extends AppCompatActivity {
 
-    // Correct declarations; ensure distinct request codes
     private static final int PICK_IMAGE_REQUEST = 1;
-    private static final int REQUEST_IMAGE_CAPTURE = 2; // Changed to 2 for distinction
-
-    private static final int REQUEST_CAMERA_PERMISSION = 1001; // Changed for clarity
+    private static final int REQUEST_IMAGE_CAPTURE = 2;
+    private static final int REQUEST_CAMERA_PERMISSION = 1001;
 
     private Spinner category;
     private EditText title, ingredients, description, hours, minutes;
-    private Button uploadPhotoButton, uploadRecipeButton;
+    private Button uploadPhotoButton, uploadRecipeButton, clearAllButton;
     private ImageView selectedImage;
 
-    private Uri selectedImageUri; // To hold the image URI
+    private Uri selectedImageUri;
 
-    private Button clearAll;
-
-    // instance for firebase storage and StorageReference
     FirebaseStorage storage;
     StorageReference storageReference;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_recipe_form);
-
-        // Initialization code is correct
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -87,25 +77,18 @@ public class RecipeUploadActivity extends AppCompatActivity {
         minutes = findViewById(R.id.minutes);
         uploadPhotoButton = findViewById(R.id.uploadPhotoButton);
         uploadRecipeButton = findViewById(R.id.uploadRecipeButton);
+        clearAllButton = findViewById(R.id.clear_text);
         selectedImage = findViewById(R.id.selectedImage);
 
-        // Populate the spinner with categories from your resources
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.recipe_categories, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         category.setAdapter(adapter);
+
+        clearAllButton.setOnClickListener(v -> clearAll());
     }
 
-    private void clearAll()
-    {
-        category = findViewById(R.id.category);
-        title = findViewById(R.id.title);
-        ingredients = findViewById(R.id.ingredients_txt);
-        description = findViewById(R.id.description);
-        hours = findViewById(R.id.hours);
-        minutes = findViewById(R.id.minutes);
-        selectedImage = findViewById(R.id.selectedImage);
-
+    private void clearAll() {
         category.setSelection(0);
         title.setText("");
         ingredients.setText("");
@@ -115,57 +98,132 @@ public class RecipeUploadActivity extends AppCompatActivity {
         selectedImage.setImageResource(android.R.drawable.ic_menu_gallery);
     }
 
-
     private void setupButtonListeners() {
-        uploadPhotoButton.setOnClickListener(v -> {
-            final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(RecipeUploadActivity.this);
-            builder.setTitle("Add Photo!");
-            builder.setItems(options, (dialog, item) -> {
-                if (options[item].equals("Take Photo")) {
-                    openCamera();
-                } else if (options[item].equals("Choose from Gallery")) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto, PICK_IMAGE_REQUEST);
-                } else if (options[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            });
-            builder.show();
-        });
-
-        uploadRecipeButton.setOnClickListener(v -> uploadImage()); // Correctly placed inside a method
+        uploadPhotoButton.setOnClickListener(v -> promptImageUploadOptions());
+        uploadRecipeButton.setOnClickListener(v -> attemptRecipeUpload());
     }
 
+    private void promptImageUploadOptions() {
+        final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
 
-    private void uploadImage() {
-        if (selectedImageUri != null) {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(RecipeUploadActivity.this);
+        builder.setTitle("Add Photo!");
+        builder.setItems(options, (dialog, item) -> {
+            if (options[item].equals("Take Photo")) {
+                openCamera();
+            } else if (options[item].equals("Choose from Gallery")) {
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto, PICK_IMAGE_REQUEST);
+            } else if (options[item].equals("Cancel")) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
 
-            // Create a reference to 'images/filename'
-            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
-
-            // Upload file to Firebase Storage
-            ref.putFile(selectedImageUri)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        progressDialog.dismiss();
-                        Toast.makeText(RecipeUploadActivity.this, "Image Uploaded!", Toast.LENGTH_SHORT).show();
-                        // Here you can also retrieve the download URL if you want
-                    })
-                    .addOnFailureListener(e -> {
-                        progressDialog.dismiss();
-                        Toast.makeText(RecipeUploadActivity.this, "Upload Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnProgressListener(taskSnapshot -> {
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                        progressDialog.setMessage("Uploaded " + (int) progress + "%");
-                    });
-        } else {
-            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+    private void attemptRecipeUpload() {
+        if (!validateRecipeInputs()) {
+            return;
         }
+
+        if (selectedImageUri != null) {
+            uploadImageAndRecipeDetails();
+        } else {
+            handleRecipeUpload("default_image_path");
+        }
+    }
+
+    private boolean validateRecipeInputs() {
+        String recipeTitle = title.getText().toString().trim();
+        String recipeIngredients = ingredients.getText().toString().trim();
+        String recipeDescription = description.getText().toString().trim();
+        String selectedCategory = category.getSelectedItem().toString();
+        String hoursText = hours.getText().toString().trim();
+        String minutesText = minutes.getText().toString().trim();
+
+        StringBuilder missingFields = new StringBuilder();
+        if (recipeTitle.isEmpty()) missingFields.append("Title, ");
+        if (recipeIngredients.isEmpty()) missingFields.append("Ingredients, ");
+        if (recipeDescription.isEmpty()) missingFields.append("Description, ");
+        if (selectedCategory.equals("Please choose a category")) missingFields.append("Category, ");
+        if (hoursText.isEmpty() && minutesText.isEmpty()) missingFields.append("Cooking Time, ");
+
+        if (missingFields.length() > 0) {
+            missingFields.setLength(missingFields.length() - 2);
+            Toast.makeText(getApplicationContext(), "Missing fields: " + missingFields.toString(), Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void uploadImageAndRecipeDetails() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setMax(100);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+        ref.putFile(selectedImageUri)
+                .addOnProgressListener(taskSnapshot -> {
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                    progressDialog.setProgress((int) progress);
+                })
+                .addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
+                    progressDialog.dismiss();
+                    handleRecipeUpload(uri.toString());
+                }))
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Log.e("RecipeUploadActivity", "Upload Failed: " + e.getMessage());
+                    Toast.makeText(RecipeUploadActivity.this, "Upload Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void handleRecipeUpload(String imageUrl) {
+        Recipe newRecipe = new Recipe(imageUrl,
+                title.getText().toString().trim(),
+                description.getText().toString().trim(),
+                ingredients.getText().toString().trim(),
+                category.getSelectedItem().toString(),
+                calculateCookingTime(hours.getText().toString().trim(), minutes.getText().toString().trim()));
+
+        insertRecipeIntoFirestore(newRecipe);
+    }
+
+    private void insertRecipeIntoFirestore(Recipe recipe) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("recipes").add(recipe)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d("RecipeUpload", "Recipe added successfully");
+                    Toast.makeText(RecipeUploadActivity.this, "Recipe added successfully", Toast.LENGTH_SHORT).show();
+                    navigateBackHome();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("RecipeUpload", "Failed to add recipe", e);
+                    Toast.makeText(RecipeUploadActivity.this, "Failed to add recipe", Toast.LENGTH_LONG).show();
+                });
+    }
+
+    private Long calculateCookingTime(String hours, String minutes) {
+        try {
+            int hoursToMinutes = hours.isEmpty() ? 0 : Integer.parseInt(hours) * 60;
+            int minutesToInt = minutes.isEmpty() ? 0 : Integer.parseInt(minutes);
+            int cookingTime = hoursToMinutes + minutesToInt;
+            return (long) cookingTime;
+        } catch (Exception e) {
+            Log.e("RecipeActivity", "Failed to parse cooking time");
+            return null;
+        }
+    }
+
+    private void navigateBackHome() {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            startActivity(new Intent(RecipeUploadActivity.this, HomeActivity.class));
+            finish();
+        }, 2000); // 2-second delay
     }
 
     private void openCamera() {
@@ -187,6 +245,7 @@ public class RecipeUploadActivity extends AppCompatActivity {
             }
         }
     }
+
     @SuppressLint("QueryPermissionsNeeded")
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -201,10 +260,8 @@ public class RecipeUploadActivity extends AppCompatActivity {
         }
     }
 
-
     private File createImageFile() {
-        // Create an image file name
-        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = null;
@@ -242,95 +299,16 @@ public class RecipeUploadActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             if (requestCode == PICK_IMAGE_REQUEST) {
-                // Handle gallery return
                 selectedImageUri = data != null ? data.getData() : null;
             } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
-                // For camera, the selectedImageUri is already set. No need to get data from Intent.
-                // However, you might want to add extra checks here, for example, if the file was actually created
+                // No need to get data from Intent. selectedImageUri is already set.
             }
 
-            // Update the ImageView with the image URI
             if (selectedImageUri != null) {
                 selectedImage.setImageURI(selectedImageUri);
-                // If using Firebase Storage, you might want to upload the image to Firebase here as well
             } else {
                 Log.e("RecipeUploadActivity", "Selected image URI is null");
             }
         }
     }
-
-    private void handleRecipeUpload() {
-        // Extract text from EditText fields
-        String recipeTitle = title.getText().toString().trim();
-        String recipeDescription = description.getText().toString().trim();
-        String recipeIngredients = ingredients.getText().toString().trim();
-        String selectedCategory = category.getSelectedItem().toString();
-        String hoursText = hours.getText().toString().trim();
-        String minutesText = minutes.getText().toString().trim();
-
-        // Validation logic
-        StringBuilder missingFields = new StringBuilder();
-        if (recipeTitle.isEmpty()) missingFields.append("Title, ");
-        if (recipeIngredients.isEmpty()) missingFields.append("Ingredients, ");
-        if (recipeDescription.isEmpty()) missingFields.append("Description, ");
-        if (selectedCategory.equals("Please choose a category")) missingFields.append("Category, ");
-        if (hoursText.isEmpty() && minutesText.isEmpty()) missingFields.append("Cooking Time, ");
-
-        if (missingFields.length() > 0) {
-            // Remove the last comma and space
-            missingFields.setLength(missingFields.length() - 2);
-            Toast.makeText(getApplicationContext(), "Missing fields: " + missingFields.toString(), Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        // Check if image has been uploaded
-        if (selectedImage != null && selectedImageUri != null) {
-            selectedImage.setImageURI(selectedImageUri);
-        } else {
-            Log.e("RecipeUploadActivity", "Selected image view or URI is null");
-        }
-
-        // For the demonstration, the image URI is directly used.
-        // In a real app scenario, consider uploading the image to Firebase Storage and storing the URL in Firestore.
-        String imagePath = selectedImageUri != null ? selectedImageUri.toString() : "default_image_path";
-
-        Recipe newRecipe = new Recipe(imagePath, recipeTitle, recipeDescription, recipeIngredients, selectedCategory, calculateCookingTime(hoursText, minutesText));
-        insertRecipeIntoFirestore(newRecipe);
-    }
-
-    private void insertRecipeIntoFirestore(Recipe recipe) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("recipes").add(recipe)
-                .addOnSuccessListener(documentReference -> {
-                    Log.d("RecipeUpload", "Recipe added successfully");
-                    Toast.makeText(RecipeUploadActivity.this, "Recipe added successfully", Toast.LENGTH_SHORT).show();
-                    navigateBackHome();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("RecipeUpload", "Failed to add recipe", e);
-                    Toast.makeText(RecipeUploadActivity.this, "Failed to add recipe", Toast.LENGTH_LONG).show();
-                });
-    }
-
-    private Long calculateCookingTime(String hours, String minutes) {
-        try{
-            int hoursToMinutes = hours.isEmpty() ? 0 : Integer.parseInt(hours) * 60;
-            int minutesToInt = minutes.isEmpty() ? 0 : Integer.parseInt(minutes);
-            int cookingTime = hoursToMinutes + minutesToInt;
-            return (long) cookingTime;
-        }
-        catch (Exception e){
-            Log.e("RecipeActivity", "Failed to parse cooking time");
-            return null;
-        }
-    }
-
-    private void navigateBackHome() {
-        // Use a delay before navigating back to allow the user to see the success message
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            startActivity(new Intent(RecipeUploadActivity.this, HomeActivity.class));
-            finish();            // Delay before navigating back to allow the user to see the success message
-        }, 2000); // 2-second delay
-    }
 }
-
