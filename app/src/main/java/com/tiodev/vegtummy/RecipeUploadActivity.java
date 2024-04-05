@@ -1,10 +1,16 @@
 package com.tiodev.vegtummy;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -13,23 +19,49 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.example.myrecipe.R;
+import com.google.firebase.database.collection.BuildConfig;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.tiodev.vegtummy.Model.Recipe;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
+
 public class RecipeUploadActivity extends AppCompatActivity {
+
+    // Correct declarations; ensure distinct request codes
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 2; // Changed to 2 for distinction
+
+    private static final int REQUEST_CAMERA_PERMISSION = 1001; // Changed for clarity
 
     private Spinner category;
     private EditText title, ingredients, description, hours, minutes;
     private Button uploadPhotoButton, uploadRecipeButton;
     private ImageView selectedImage;
-    private static final int PICK_IMAGE_REQUEST = 1;
+
     private Uri selectedImageUri; // To hold the image URI
 
     private Button clearAll;
+
+    // instance for firebase storage and StorageReference
+    FirebaseStorage storage;
+    StorageReference storageReference;
+
 
 
     @Override
@@ -37,36 +69,15 @@ public class RecipeUploadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_recipe_form);
 
-        // Initialize UI components and set up listeners
+        // Initialization code is correct
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
         initializeUI();
         setupButtonListeners();
-
-        clearAll = findViewById(R.id.clear_text);
-        clearAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearAll();
-            }
-        });
     }
-    private void clearAll()
-    {
-        category = findViewById(R.id.category);
-        title = findViewById(R.id.title);
-        ingredients = findViewById(R.id.ingredients_txt);
-        description = findViewById(R.id.description);
-        hours = findViewById(R.id.hours);
-        minutes = findViewById(R.id.minutes);
-        selectedImage = findViewById(R.id.selectedImage);
 
-        category.setSelection(0);
-        title.setText("");
-        ingredients.setText("");
-        description.setText("");
-        hours.setText("");
-        minutes.setText("");
-        selectedImage.setImageResource(android.R.drawable.ic_menu_gallery);
-    }
     private void initializeUI() {
         category = findViewById(R.id.category);
         title = findViewById(R.id.title);
@@ -85,25 +96,165 @@ public class RecipeUploadActivity extends AppCompatActivity {
         category.setAdapter(adapter);
     }
 
+    private void clearAll()
+    {
+        category = findViewById(R.id.category);
+        title = findViewById(R.id.title);
+        ingredients = findViewById(R.id.ingredients_txt);
+        description = findViewById(R.id.description);
+        hours = findViewById(R.id.hours);
+        minutes = findViewById(R.id.minutes);
+        selectedImage = findViewById(R.id.selectedImage);
+
+        category.setSelection(0);
+        title.setText("");
+        ingredients.setText("");
+        description.setText("");
+        hours.setText("");
+        minutes.setText("");
+        selectedImage.setImageResource(android.R.drawable.ic_menu_gallery);
+    }
+
+
     private void setupButtonListeners() {
         uploadPhotoButton.setOnClickListener(v -> {
-            // Intent to pick an image from the gallery
-            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(intent, PICK_IMAGE_REQUEST);
+            final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(RecipeUploadActivity.this);
+            builder.setTitle("Add Photo!");
+            builder.setItems(options, (dialog, item) -> {
+                if (options[item].equals("Take Photo")) {
+                    openCamera();
+                } else if (options[item].equals("Choose from Gallery")) {
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(pickPhoto, PICK_IMAGE_REQUEST);
+                } else if (options[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
         });
 
-        uploadRecipeButton.setOnClickListener(v -> handleRecipeUpload());
+        uploadRecipeButton.setOnClickListener(v -> uploadImage()); // Correctly placed inside a method
+    }
+
+
+    private void uploadImage() {
+        if (selectedImageUri != null) {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            // Create a reference to 'images/filename'
+            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+
+            // Upload file to Firebase Storage
+            ref.putFile(selectedImageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        progressDialog.dismiss();
+                        Toast.makeText(RecipeUploadActivity.this, "Image Uploaded!", Toast.LENGTH_SHORT).show();
+                        // Here you can also retrieve the download URL if you want
+                    })
+                    .addOnFailureListener(e -> {
+                        progressDialog.dismiss();
+                        Toast.makeText(RecipeUploadActivity.this, "Upload Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnProgressListener(taskSnapshot -> {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                        progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                    });
+        } else {
+            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openCamera() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+        } else {
+            dispatchTakePictureIntent();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
+            } else {
+                Toast.makeText(this, "Camera permission is required to use this feature", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    @SuppressLint("QueryPermissionsNeeded")
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = createImageFile();
+            if (photoFile != null) {
+                selectedImageUri = FileProvider.getUriForFile(this,
+                        "com.example.myrecipe.fileprovider", photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+
+    private File createImageFile() {
+        // Create an image file name
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = null;
+        try {
+            image = File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",         /* suffix */
+                    storageDir      /* directory */
+            );
+        } catch (IOException e) {
+            Log.e("RecipeUploadActivity", "Error occurred while creating the file", e);
+        }
+        return image;
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (selectedImageUri != null) {
+            outState.putString("cameraImageUri", selectedImageUri.toString());
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.containsKey("cameraImageUri")) {
+            selectedImageUri = Uri.parse(savedInstanceState.getString("cameraImageUri"));
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            selectedImageUri = data.getData();
-            if (selectedImage == null) {
-                Log.e("RecipeUploadActivity", "selectedImage is null");
-            } else {
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PICK_IMAGE_REQUEST) {
+                // Handle gallery return
+                selectedImageUri = data != null ? data.getData() : null;
+            } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                // For camera, the selectedImageUri is already set. No need to get data from Intent.
+                // However, you might want to add extra checks here, for example, if the file was actually created
+            }
+
+            // Update the ImageView with the image URI
+            if (selectedImageUri != null) {
                 selectedImage.setImageURI(selectedImageUri);
+                // If using Firebase Storage, you might want to upload the image to Firebase here as well
+            } else {
+                Log.e("RecipeUploadActivity", "Selected image URI is null");
             }
         }
     }
