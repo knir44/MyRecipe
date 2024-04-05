@@ -157,7 +157,7 @@
                 android:fontFamily="@font/poppins_light"
                 android:text="Salad"
                 android:textColor="@color/black"
-                android:textSize="17sp" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/MainDish"
@@ -184,7 +184,7 @@
                 android:gravity="center"
                 android:text="Main Dish"
                 android:textColor="@color/black"
-                android:textSize="17sp" />
+                android:textSize="16sp" />
 
 
             <ImageView
@@ -214,7 +214,7 @@
                 android:gravity="center"
                 android:text="Drinks"
                 android:textColor="@color/black"
-                android:textSize="17sp" />
+                android:textSize="16sp" />
 
 
             <ImageView
@@ -244,7 +244,7 @@
                 android:gravity="center"
                 android:text="Dessert"
                 android:textColor="@color/black"
-                android:textSize="17sp" />
+                android:textSize="16sp" />
 
 
         </RelativeLayout>
