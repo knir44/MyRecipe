@@ -132,16 +132,17 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/salad"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/category_card_bc"
-                android:padding="4dp"
-                android:src="@drawable/category_salad" />
+                android:src="@drawable/category_salad"
+                android:background="@color/white"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/black"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -159,7 +160,7 @@
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/MainDish"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
@@ -167,9 +168,11 @@
                 android:layout_marginStart="17dp"
                 android:layout_marginTop="15dp"
                 android:layout_toEndOf="@+id/salad"
-                android:background="@drawable/category_card_bc"
-                android:padding="4dp"
-                android:src="@drawable/category_main" />
+                android:src="@drawable/category_main"
+                android:background="@color/white"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/black"/>
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -187,7 +190,7 @@
                 android:textSize="16sp" />
 
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/Drinks"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
@@ -195,9 +198,11 @@
                 android:layout_marginStart="17dp"
                 android:layout_marginTop="15dp"
                 android:layout_toEndOf="@+id/MainDish"
-                android:background="@drawable/category_card_bc"
-                android:padding="4dp"
-                android:src="@drawable/catergory_drinks" />
+                android:src="@drawable/catergory_drinks"
+                android:background="@color/white"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/black"/>
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -217,7 +222,7 @@
                 android:textSize="16sp" />
 
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/Dessert"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
@@ -225,9 +230,11 @@
                 android:layout_marginStart="17dp"
                 android:layout_marginTop="15dp"
                 android:layout_toEndOf="@+id/Drinks"
-                android:background="@drawable/category_card_bc"
-                android:padding="4dp"
-                android:src="@drawable/category_dessert" />
+                android:src="@drawable/category_dessert"
+                android:background="@color/white"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/black"/>
+
 
             <TextView
                 android:layout_width="wrap_content"
