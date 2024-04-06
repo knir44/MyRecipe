@@ -6,24 +6,16 @@
     android:layout_height="match_parent"
     tools:context="com.tiodev.vegtummy.SplashActivity">
 
-   <!-- <ImageView
-        android:id="@+id/gifImageView"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_marginStart="-5dp"
-        android:src="@drawable/logo_animation"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
 
     <ImageView
         android:id="@+id/gifImageView2"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/logo_animation"
+        android:layout_width="292dp"
+        android:layout_height="221dp"
+        android:background="@null"
+        android:src="@drawable/new_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

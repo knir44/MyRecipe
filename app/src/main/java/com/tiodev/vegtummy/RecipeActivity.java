@@ -44,9 +44,9 @@ public class RecipeActivity extends AppCompatActivity {
 
         // Set the ingBtn as the selected default
         ingBtn.setBackgroundResource(R.drawable.btn_ing);
-        ingBtn.setTextColor(getColor(R.color.white));
+        ingBtn.setTextColor(getColor(R.color.textOnPrimary));
         stepBtn.setBackground(null);
-        stepBtn.setTextColor(getColor(R.color.black));
+        stepBtn.setTextColor(getColor(R.color.textColor));
 
         /* Set the image - if the Uri is invalid or the image cannot be loaded, a placeholder based
         on the category will be displayed */
@@ -103,16 +103,16 @@ public class RecipeActivity extends AppCompatActivity {
     private void toggleStepView(Button stepBtn, Button ing_btn, ScrollView scrollView, ScrollView scrollView_step, boolean showSteps) {
         if (showSteps) {
             stepBtn.setBackgroundResource(R.drawable.btn_ing);
-            stepBtn.setTextColor(getColor(R.color.white));
+            stepBtn.setTextColor(getColor(R.color.textOnPrimary));
             ing_btn.setBackground(null);
-            ing_btn.setTextColor(getColor(R.color.black));
+            ing_btn.setTextColor(getColor(R.color.textColor));
             scrollView.setVisibility(View.GONE);
             scrollView_step.setVisibility(View.VISIBLE);
         } else {
             ing_btn.setBackgroundResource(R.drawable.btn_ing);
-            ing_btn.setTextColor(getColor(R.color.white));
+            ing_btn.setTextColor(getColor(R.color.textOnPrimary));
             stepBtn.setBackground(null);
-            stepBtn.setTextColor(getColor(R.color.black));
+            stepBtn.setTextColor(getColor(R.color.textColor));
             scrollView.setVisibility(View.VISIBLE);
             scrollView_step.setVisibility(View.GONE);
         }

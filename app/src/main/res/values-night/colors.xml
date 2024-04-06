@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Color Scheme for Dark Theme -->
+    <color name="primaryColor">#019267</color> <!-- Adjusted for dark theme -->
+    <color name="primaryLightColor">#121212</color> <!-- Typically, a lighter shade of primary color -->
+    <color name="primaryDarkColor">#000000</color> <!-- Darker shade for dark theme -->
+    <color name="secondaryColor">#03DAC6</color> <!-- Adjusted if necessary for dark mode -->
+    <color name="backgroundColor">#121212</color> <!-- Dark background for dark themes -->
+    <color name="textColor">#FFFFFF</color> <!-- textOnPrimary text for better readability -->
+    <color name="textLightColor">#F5F5F5</color> <!-- Lighter text if needed -->
+    <color name="textOnPrimary">#F5F5F5</color> <!-- Text on primary color surfaces -->
+    <color name="cardBackground">#000000</color>
+</resources>
