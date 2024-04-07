@@ -80,6 +80,11 @@ public class RecipeUploadActivity extends AppCompatActivity {
         clearAllButton = findViewById(R.id.clear_text);
         selectedImage = findViewById(R.id.selectedImage);
 
+        // Set back button
+        ImageView backButton = findViewById(R.id.imageView2);
+        backButton.setOnClickListener(v -> finish());
+
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.recipe_categories, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
