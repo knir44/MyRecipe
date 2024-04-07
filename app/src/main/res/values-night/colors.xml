@@ -10,4 +10,8 @@
     <color name="textLightColor">#F5F5F5</color> <!-- Lighter text if needed -->
     <color name="textOnPrimary">#F5F5F5</color> <!-- Text on primary color surfaces -->
     <color name="cardBackground">#000000</color>
+    <!-- Gradient Colors -->
+    <color name="gradientStartColor">#00616161</color>
+    <color name="gradientEndColor">#A8000000</color>
+    <color name="gradientStrokeColor">#343434</color>
 </resources>

@@ -14,4 +14,8 @@
     <color name="colorPrimaryDark">#E64A19</color>
     <color name="colorAccent">#FFEB3B</color>
     <color name="cardBackground">#FFFFFFFF</color>
+    <!-- Gradient Colors -->
+    <color name="gradientStartColor">#FFEFEFEF</color>
+    <color name="gradientEndColor">#FFFFFFFF</color>
+    <color name="gradientStrokeColor">#CCCCCC</color>
 </resources>
