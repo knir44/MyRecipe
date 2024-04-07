@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Color Scheme for Dark Theme -->
     <color name="primaryColor">#019267</color> <!-- Adjusted for dark theme -->
     <color name="primaryLightColor">#121212</color> <!-- Typically, a lighter shade of primary color -->

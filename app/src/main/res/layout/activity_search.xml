@@ -34,8 +34,10 @@
         android:layout_marginTop="8dp"
         android:padding="5dp"
         android:src="?attr/actionModeCloseDrawable"
+        android:tint="#FF000000"
         app:layout_constraintStart_toStartOf="@+id/search"
-        app:layout_constraintTop_toTopOf="@+id/search" />
+        app:layout_constraintTop_toTopOf="@+id/search"
+        tools:ignore="UseAppTint" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcview"

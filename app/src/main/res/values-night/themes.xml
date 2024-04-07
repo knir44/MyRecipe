@@ -11,15 +11,7 @@
         <item name="colorOnSecondary">@color/textColor</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
     </style>
-
-    <!-- Style for round image view, if used. -->
-    <!-- <style name="roundimageview" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">20dp</item>
-        <item name="color">@color/textOnPrimary</item>
-    </style> -->
 
     <!-- Animations for dialogs. -->
     <style name="DialogAnimation">
