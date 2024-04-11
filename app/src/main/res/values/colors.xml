@@ -11,7 +11,7 @@
     <color name="textOnPrimary">#FFFFFFFF</color>
     <!-- Accent and Status colors -->
     <color name="colorPrimary">#FF5722</color>
-    <color name="AddRecipePressed">#FF5722</color>
+    <color name="AddRecipePressed">#E3AE9E</color>
     <color name="colorPrimaryDark">#E64A19</color>
     <color name="colorAccent">#FFEB3B</color>
     <color name="cardBackground">#FFFFFFFF</color>
