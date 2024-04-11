@@ -3,6 +3,7 @@ package com.tiodev.vegtummy;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,11 +34,14 @@ import com.example.myrecipe.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import com.tiodev.vegtummy.Model.Recipe;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -47,14 +52,22 @@ public class RecipeUploadActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA_PERMISSION = 1001;
 
     private Spinner category;
-    private EditText title, ingredients, description, hours, minutes;
-    private Button uploadPhotoButton, uploadRecipeButton, clearAllButton;
+    private EditText title, ingredients, description;
+    private EditText hours, minutes;
+    private FloatingActionButton uploadRecipeButton;
+    private FloatingActionButton uploadPhotoButton;
     private ImageView selectedImage;
+    private Button btnPickTime;
+    private TextView textViewPrepTime;
+
 
     private Uri selectedImageUri;
 
     FirebaseStorage storage;
     StorageReference storageReference;
+
+    public RecipeUploadActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +90,7 @@ public class RecipeUploadActivity extends AppCompatActivity {
         minutes = findViewById(R.id.minutes);
         uploadPhotoButton = findViewById(R.id.uploadPhotoButton);
         uploadRecipeButton = findViewById(R.id.uploadRecipeButton);
-        clearAllButton = findViewById(R.id.clear_text);
+        FloatingActionButton clearAllButton = findViewById(R.id.clear_text);
         selectedImage = findViewById(R.id.selectedImage);
 
         // Set back button
@@ -91,6 +104,27 @@ public class RecipeUploadActivity extends AppCompatActivity {
         category.setAdapter(adapter);
 
         clearAllButton.setOnClickListener(v -> clearAll());
+    }
+    private void showTimePickerDialog() {
+        final Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+        // This time picker will be in 24-hour format
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                (view, hourOfDay, minuteOfHour) -> {
+                    // The format string "%02d:%02d" already does not include AM/PM
+                    // This will display time in 24-hour format, e.g., "14:45" for 2:45 PM
+                    String format = "%02d:%02d";
+                    @SuppressLint("DefaultLocale") String time = String.format(format, hourOfDay, minuteOfHour);
+
+                    // Update the TextView to display the selected time
+                    if (textViewPrepTime != null) {
+                        textViewPrepTime.setText(time);
+                    }
+                }, hour, minute, true); // Set to 'true' for 24-hour format
+
+        timePickerDialog.show();
     }
 
     private void clearAll() {

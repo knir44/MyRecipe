@@ -11,6 +11,7 @@
     <color name="textOnPrimary">#FFFFFFFF</color>
     <!-- Accent and Status colors -->
     <color name="colorPrimary">#FF5722</color>
+    <color name="AddRecipePressed">#FF5722</color>
     <color name="colorPrimaryDark">#E64A19</color>
     <color name="colorAccent">#FFEB3B</color>
     <color name="cardBackground">#FFFFFFFF</color>
@@ -18,4 +19,6 @@
     <color name="gradientStartColor">#FFEFEFEF</color>
     <color name="gradientEndColor">#FFFFFFFF</color>
     <color name="gradientStrokeColor">#CCCCCC</color>
+    <color name="fabRippleColor">#66FFFFFF</color>
+    <color name="fabColor">#FF018786</color>
 </resources>

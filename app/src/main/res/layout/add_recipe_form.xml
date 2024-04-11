@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingBottom="16dp"
-                android:text="Enter your recipe here"
+                android:text="@string/enter_your_recipe_here"
                 android:textColor="@color/textColor"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -51,18 +51,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
-            android:id="@+id/clear_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:layout_marginTop="6dp"
-            android:textColor="@color/textColor"
-            android:textSize="10sp"
-            android:padding="8dp"
-            android:background="@drawable/button_clear_all"
-        />
-    </LinearLayout>
+        </LinearLayout>
 
         <Spinner
             android:id="@+id/category"
@@ -75,33 +64,39 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Recipe Title"
+            android:hint="@string/recipe_title"
             android:padding="8dp"
             android:background="@color/backgroundColor"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/ingredients_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Required Ingredients"
+            android:hint="@string/required_ingredients"
             android:padding="8dp"
             android:background="@color/backgroundColor"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:autofillHints=""
+            android:inputType="text" />
         <EditText
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description"
+            android:hint="@string/description"
             android:padding="8dp"
             android:background="@color/backgroundColor"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:autofillHints="" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:gravity="center_horizontal">
+
 
             <EditText
                 android:id="@+id/hours"
@@ -123,35 +118,72 @@
 
         </LinearLayout>
 
-        <Button
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/uploadPhotoButton"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Upload Photo"
-            android:textColor="@color/textOnPrimary"
-            android:padding="12dp"
-            android:background="@drawable/button_background"
-            android:layout_marginBottom="16dp"/>
-
-        <Button
-            android:id="@+id/uploadRecipeButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Upload Recipe"
-            android:textColor="@color/textOnPrimary"
-            android:padding="12dp"
-            android:background="@drawable/button_background"
-            android:layout_marginBottom="16dp"/>
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/add_photo"
+            app:backgroundTint="@color/primaryColor"
+            app:fabCustomSize="70dp"
+            app:maxImageSize="45dp"
+            app:rippleColor="@color/fabRippleColor"
+            app:srcCompat="@drawable/camera_icon" />
 
         <ImageView
-            android:id="@+id/selectedImage"
+                android:id="@+id/selectedImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:adjustViewBounds="true"
+                android:background="@color/backgroundColor"
+                android:contentDescription="TODO"
+                android:scaleType="fitCenter"
+                android:src="@android:drawable/ic_menu_gallery" />
+
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:src="@android:drawable/ic_menu_gallery"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            android:background="@color/backgroundColor"
-            android:layout_marginBottom="16dp"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:layout_margin="10dp"
+            >
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/clear_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/clear_form"
+            app:backgroundTint="@color/primaryColor"
+            app:fabCustomSize="70dp"
+            app:maxImageSize="55dp"
+            app:rippleColor="@color/fabRippleColor"
+            app:srcCompat="@drawable/button_clear_all" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/uploadRecipeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:contentDescription="@string/add_recipe"
+            app:backgroundTint="@color/primaryColor"
+            app:fabCustomSize="70dp"
+            app:maxImageSize="55dp"
+            app:rippleColor="@color/fabRippleColor"
+            app:srcCompat="@drawable/check_mark" />
+        </LinearLayout>
 
         <!-- RecyclerView added below -->
         <androidx.recyclerview.widget.RecyclerView

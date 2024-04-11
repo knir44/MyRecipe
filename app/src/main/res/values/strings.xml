@@ -1,5 +1,16 @@
 <resources>
     <string name="app_name">RecipeApp</string>
+    <string name="add_recipe">Add Recipe</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="minutes">Minutes</string>
+    <string name="hours">Hours</string>
+    <string name="description">Description</string>
+    <string name="required_ingredients">Required Ingredients</string>
+    <string name="recipe_title">Recipe Title</string>
+    <string name="enter_your_recipe_here">Enter your recipe here</string>
+    <string name="clear_form">Clear Form</string>
+    <string name="foodie">foodie!</string>
+    <string name="add_photo" />
     <string-array name="recipe_categories">
         <item>Please choose a category</item>
         <item>Popular</item>
