@@ -38,6 +38,7 @@ dependencies {
     implementation("com.squareup.picasso:picasso:2.8")
     implementation("com.airbnb.android:lottie:5.2.0") // Use the latest version
     implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation("com.google.android.material:material:1.11.0");
 
     implementation("com.google.android.material:material")
 
