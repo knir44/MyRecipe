@@ -11,6 +11,7 @@
     <string name="clear_form">Clear Form</string>
     <string name="foodie">foodie!</string>
     <string name="add_photo" />
+    <string name="cooking_time">Cooking Time</string>
     <string-array name="recipe_categories">
         <item>Please choose a category</item>
         <item>Popular</item>

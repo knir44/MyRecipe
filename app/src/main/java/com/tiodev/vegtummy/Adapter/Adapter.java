@@ -60,7 +60,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         holder.title.setText(recipe.getTitle());
 
         // Set time
-        holder.time.setText(recipe.getCookingTime() + " minutes");
+        holder.time.setText(recipe.getCookingTime());
 
         // Set image
         int placeholderImage = getPlaceholderImage(recipe.getCategory());
