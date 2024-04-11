@@ -2,37 +2,38 @@ package com.tiodev.vegtummy.Model;
 
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
-
 public class Recipe {
-    // Assuming these are the fields you have in your Recipe class
     private String imagePath;
     private String title;
     private String description;
     private String ingredients;
     private String category;
-    private Long cookingTime;
+    private String cookingTime;
 
-    // No-argument constructor for Firebase - must
     public Recipe() {
+        // No-args constructor
     }
 
-    // Constructor with arguments
-    public Recipe(String imagePath, String title, String description, String ingredients, String category, Long cookingTime) {
-        this.imagePath = imagePath;
-        this.title = title;
-        this.description = description;
-        this.ingredients = ingredients;
-        this.category = category;
-        this.cookingTime = cookingTime;
+    public Recipe(String imagePath, String title, String description, String ingredients, String category, String cookingTime) {
+        setImagePath(imagePath);
+        setTitle(title);
+        setDescription(description);
+        setIngredients(ingredients);
+        setCategory(category);
+        setCookingTime(cookingTime);
     }
 
-    // Getters and setters for all fields
-    public Uri getImagePath() {
-        return Uri.parse(this.imagePath);
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public Long getCookingTime() { return this.cookingTime; }
+    public Uri getImageUri() {
+        return Uri.parse(imagePath);
+    }
+
+    public String getCookingTime() {
+        return cookingTime;
+    }
 
     public String getTitle() {
         return title;
@@ -51,27 +52,26 @@ public class Recipe {
     }
 
     public void setCategory(String category) {
-        this.category = category;
+        this.category = category != null ? category : "";
     }
 
-    public void setTitle(String title) { this.title = title; }
-
-    public void setImagePath(String path) {this.imagePath = path;}
-
-    public void setCookingTime(Long time) {this.cookingTime = time;}
-
-    public void setDescription(String description) {this.description = description;}
-
-    public  void setIngredients(String ingredients) {this.ingredients = ingredients;}
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "Recipe{" +
-                // Other fields...
-                "cookingTime=" + cookingTime +
-                '}';
+    public void setTitle(String title) {
+        this.title = title != null ? title : "";
     }
 
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath != null ? imagePath : "";
+    }
 
+    public void setCookingTime(String cookingTime) {
+        this.cookingTime = cookingTime != null ? cookingTime : "";
+    }
+
+    public void setDescription(String description) {
+        this.description = description != null ? description : "";
+    }
+
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients != null ? ingredients : "";
+    }
 }

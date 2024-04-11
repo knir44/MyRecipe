@@ -2,6 +2,7 @@ package com.tiodev.vegtummy.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,18 +34,13 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.MyViewHo
         return new MyViewHolder(view);
     }
 
-    // TODO: adjust default placeholder for popular recipes
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final Recipe recipe = data.get(position);
 
         // Display cooking time
-        String displayTime = recipe.getCookingTime().toString();
-        if(displayTime != null && displayTime != ""){
-            holder.cookingTime.setText(displayTime + " min");
-        } else {
-            holder.cookingTime.setText("N/A");
-        }
+        Log.d("AdapterPopular", "Cooking time: " + recipe.getCookingTime());
+        holder.cookingTime.setText(recipe.getCookingTime());
 
         // Display Image
         Glide.with(holder.img.getContext())

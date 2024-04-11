@@ -33,7 +33,8 @@
 
         <activity
             android:name="com.tiodev.vegtummy.SplashActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -41,20 +42,24 @@
         </activity>
         <activity
             android:name="com.tiodev.vegtummy.SearchActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.tiodev.vegtummy.HomeActivity"
-            android:exported="true"/>
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.tiodev.vegtummy.RecipeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.tiodev.vegtummy.MainActivity"
-            android:exported="true" />
-        <!-- Add the RecipeUploadActivity here -->
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.tiodev.vegtummy.RecipeUploadActivity"
-            android:exported="true"/> <!-- Adjust the exported attribute as needed -->
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="preloaded_fonts"

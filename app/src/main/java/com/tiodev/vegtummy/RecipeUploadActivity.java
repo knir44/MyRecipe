@@ -3,6 +3,7 @@ package com.tiodev.vegtummy;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,12 +13,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,12 +32,17 @@ import com.example.myrecipe.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import com.tiodev.vegtummy.Model.Recipe;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 public class RecipeUploadActivity extends AppCompatActivity {
@@ -47,14 +52,19 @@ public class RecipeUploadActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA_PERMISSION = 1001;
 
     private Spinner category;
-    private EditText title, ingredients, description, hours, minutes;
-    private Button uploadPhotoButton, uploadRecipeButton, clearAllButton;
+    private EditText title, ingredients, description;
+    private EditText cookingTimeDisplay;
+    private FloatingActionButton uploadRecipeButton;
+    private FloatingActionButton uploadPhotoButton;
     private ImageView selectedImage;
 
     private Uri selectedImageUri;
 
     FirebaseStorage storage;
     StorageReference storageReference;
+
+    public RecipeUploadActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +83,10 @@ public class RecipeUploadActivity extends AppCompatActivity {
         title = findViewById(R.id.title);
         ingredients = findViewById(R.id.ingredients_txt);
         description = findViewById(R.id.description);
-        hours = findViewById(R.id.hours);
-        minutes = findViewById(R.id.minutes);
+        cookingTimeDisplay = findViewById(R.id.cookingTimeDisplay);
         uploadPhotoButton = findViewById(R.id.uploadPhotoButton);
         uploadRecipeButton = findViewById(R.id.uploadRecipeButton);
-        clearAllButton = findViewById(R.id.clear_text);
+        FloatingActionButton clearAllButton = findViewById(R.id.clear_text);
         selectedImage = findViewById(R.id.selectedImage);
 
         // Set back button
@@ -91,6 +100,53 @@ public class RecipeUploadActivity extends AppCompatActivity {
         category.setAdapter(adapter);
 
         clearAllButton.setOnClickListener(v -> clearAll());
+        cookingTimeDisplay.setOnClickListener(v -> showTimePickerDialog());
+    }
+    private void showTimePickerDialog() {
+        // Initialize to a default time
+        int currentHour = 0;
+        int currentMinute = 0;
+
+        // Try parsing the current time from cookingTimeDisplay
+        String currentDisplayTime = cookingTimeDisplay.getText().toString();
+        if (!currentDisplayTime.isEmpty()) {
+            String[] timeParts = currentDisplayTime.split(" and ");
+            for (String part : timeParts) {
+                if (part.contains("hour")) {
+                    currentHour = Integer.parseInt(part.replaceAll("[^0-9]", ""));
+                } else if (part.contains("min")) {
+                    currentMinute = Integer.parseInt(part.replaceAll("[^0-9]", ""));
+                }
+            }
+        }
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                this,
+                android.R.style.Theme_Holo_Light_Dialog_NoActionBar, // Forcing the spinner style
+                (view, hourOfDay, minuteOfHour) -> {
+                    // Adjusting the format based on singular or plural hours/minutes
+                    String hourText = hourOfDay == 1 ? "hour" : "hours";
+                    String minuteText = minuteOfHour == 1 ? "min" : "mins";
+
+                    // Building the time string
+                    StringBuilder timeBuilder = new StringBuilder();
+                    if (hourOfDay > 0) {
+                        timeBuilder.append(hourOfDay).append(" ").append(hourText);
+                    }
+                    if (minuteOfHour > 0) {
+                        if (timeBuilder.length() > 0) timeBuilder.append(" and ");
+                        timeBuilder.append(minuteOfHour).append(" ").append(minuteText);
+                    }
+
+                    // Setting the formatted string to the EditText
+                    cookingTimeDisplay.setText(timeBuilder.toString());
+                },
+                currentHour, currentMinute, true // True for 24-hour format
+        );
+
+        // Show the dialog
+        Objects.requireNonNull(timePickerDialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent); // Required to force the dialog theme
+        timePickerDialog.show();
     }
 
     private void clearAll() {
@@ -98,8 +154,7 @@ public class RecipeUploadActivity extends AppCompatActivity {
         title.setText("");
         ingredients.setText("");
         description.setText("");
-        hours.setText("");
-        minutes.setText("");
+        cookingTimeDisplay.setText("");
         selectedImage.setImageResource(android.R.drawable.ic_menu_gallery);
     }
 
@@ -143,15 +198,14 @@ public class RecipeUploadActivity extends AppCompatActivity {
         String recipeIngredients = ingredients.getText().toString().trim();
         String recipeDescription = description.getText().toString().trim();
         String selectedCategory = category.getSelectedItem().toString();
-        String hoursText = hours.getText().toString().trim();
-        String minutesText = minutes.getText().toString().trim();
+        String cookingTime = cookingTimeDisplay.getText().toString().trim();
 
         StringBuilder missingFields = new StringBuilder();
         if (recipeTitle.isEmpty()) missingFields.append("Title, ");
         if (recipeIngredients.isEmpty()) missingFields.append("Ingredients, ");
         if (recipeDescription.isEmpty()) missingFields.append("Description, ");
         if (selectedCategory.equals("Please choose a category")) missingFields.append("Category, ");
-        if (hoursText.isEmpty() && minutesText.isEmpty()) missingFields.append("Cooking Time, ");
+        if (cookingTime.isEmpty()) missingFields.append("Cooking Time, ");
 
         if (missingFields.length() > 0) {
             missingFields.setLength(missingFields.length() - 2);
@@ -193,7 +247,7 @@ public class RecipeUploadActivity extends AppCompatActivity {
                 description.getText().toString().trim(),
                 ingredients.getText().toString().trim(),
                 category.getSelectedItem().toString(),
-                calculateCookingTime(hours.getText().toString().trim(), minutes.getText().toString().trim()));
+                cookingTimeDisplay.getText().toString().trim());
 
         insertRecipeIntoFirestore(newRecipe);
     }
@@ -210,18 +264,6 @@ public class RecipeUploadActivity extends AppCompatActivity {
                     Log.e("RecipeUpload", "Failed to add recipe", e);
                     Toast.makeText(RecipeUploadActivity.this, "Failed to add recipe", Toast.LENGTH_LONG).show();
                 });
-    }
-
-    private Long calculateCookingTime(String hours, String minutes) {
-        try {
-            int hoursToMinutes = hours.isEmpty() ? 0 : Integer.parseInt(hours) * 60;
-            int minutesToInt = minutes.isEmpty() ? 0 : Integer.parseInt(minutes);
-            int cookingTime = hoursToMinutes + minutesToInt;
-            return (long) cookingTime;
-        } catch (Exception e) {
-            Log.e("RecipeActivity", "Failed to parse cooking time");
-            return null;
-        }
     }
 
     private void navigateBackHome() {

@@ -64,12 +64,7 @@ public class RecipeActivity extends AppCompatActivity {
         ingredients.setText(getIntent().getStringExtra("ingredients"));
 
         // Set the time
-        long cookingTime = getIntent().getLongExtra("cookingTime", -1);
-        if(cookingTime != -1) {
-            time.setText(cookingTime + " minutes");
-        } else {
-            time.setText("N/A");
-        }
+        time.setText(getIntent().getStringExtra("cookingTime"));
 
         // Set the instructions for the recipe
         steps.setText(getIntent().getStringExtra("description"));

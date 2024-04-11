@@ -74,7 +74,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                filter(editable.toString());
+                filter(editable.toString().trim());
             }
         });
     }

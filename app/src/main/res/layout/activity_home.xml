@@ -15,26 +15,21 @@
         android:paddingEnd="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/add_recipe_text"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_recipe_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="70dp"
-            android:layout_marginBottom="-58dp"
-            android:text=""
-            android:textAppearance="?attr/textAppearanceListItem" />
-
-        <ImageButton
-            android:id="@+id/add_recipe_btn"
-            android:layout_width="127dp"
-            android:layout_height="141dp"
-            android:layout_marginVertical="8dp"
-            android:layout_marginRight="-20dp"
+            android:layout_gravity="right"
+            android:layout_margin="5dp"
             android:background="@null"
+            app:fabCustomSize="70dp"
+            app:maxImageSize="60dp"
+            app:backgroundTint="@color/colorPrimary"
+            android:contentDescription="TODO"
             android:onClick="addRecipe"
-            android:scaleType="fitStart"
-            android:src="@drawable/add_recipe_icon"
-            tools:ignore="OnClick" />
+            app:srcCompat="@drawable/add_recipe_icon"
+            app:rippleColor="@color/AddRecipePressed"
+            tools:ignore="MissingConstraints,OnClick" />
     </LinearLayout>
 
     <TextView
@@ -44,8 +39,10 @@
         android:layout_marginStart="24dp"
         android:fontFamily="@font/poppins_semi"
         android:text="Hello"
+        android:paddingLeft="5dp"
         android:textColor="@color/textColor"
         android:textSize="28sp"
+        android:layout_margin="10dp"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteY="-13dp" />
@@ -56,7 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
         android:fontFamily="@font/poppins_semi"
-        android:text="foodie!"
+        android:text="@string/foodie"
+        android:paddingLeft="3dp"
         android:textColor="@color/primaryColor"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -67,6 +65,7 @@
         android:id="@+id/textView4"
         android:layout_width="230dp"
         android:layout_height="48dp"
+        android:paddingLeft="5dp"
         android:fontFamily="@font/poppins_light"
         android:text="Which food would you like to cook?"
         android:textColor="@color/textColor"
@@ -272,7 +271,6 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_gravity="center"
-        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/popular_text"
