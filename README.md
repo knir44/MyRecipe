@@ -11,17 +11,17 @@ VegTummy is a culinary treasure for vegetarians and vegan food enthusiasts, offe
 - **Interactive UI**: The app's design is both aesthetically pleasing and functional, promoting an engaging user experience.
 
 ## Screenshots
-![Salad Category](app/src/main/res/drawable/salad_catagory_screenshot.jpeg)
 *Salad Category View*
+![Salad Category](app/src/main/res/drawable/salad_catagory_screenshot.jpeg)
 
-![Home Screen](app/src/main/res/drawable/home_screen_screenshot.jpeg)
 *Home Screen with Categories and Popular Recipes*
+![Home Screen](app/src/main/res/drawable/home_screen_screenshot.jpeg)
 
-![Search Results](app/src/main/res/drawable/search_results_screenshot.jpeg)
 *Search Results for Various Recipes*
+![Search Results](app/src/main/res/drawable/search_results_screenshot.jpeg)
 
-![Recipe Detail](app/src/main/res/drawable/recipe_detail_screenshot.jpeg)
 *Detailed Recipe View*
+![Recipe Detail](app/src/main/res/drawable/recipe_detail_screenshot.jpeg)
 
 ## Tech Stack
 - Android Studio

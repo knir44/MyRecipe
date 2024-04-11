@@ -9,6 +9,7 @@
     <color name="textColor">#FF000000</color>
     <color name="textLightColor">#1E000000</color>
     <color name="textOnPrimary">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
     <!-- Accent and Status colors -->
     <color name="colorPrimary">#FF5722</color>
     <color name="AddRecipePressed">#E3AE9E</color>
