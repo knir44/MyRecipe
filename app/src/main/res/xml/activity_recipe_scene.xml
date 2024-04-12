@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MotionScene 
+<MotionScene
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
@@ -18,31 +18,31 @@
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
         <Constraint
-            android:id="@+id/recipe_img"
+            android:id="@+id/recipe_img_framelayout"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
         <Constraint
-            android:id="@+id/recipe_img"
+            android:id="@+id/recipe_img_framelayout"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             motion:layout_constraintTop_toTopOf="parent" />
         <Constraint
-            android:id="@+id/recipe_img"
+            android:id="@+id/recipe_img_framelayout"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             motion:layout_constraintStart_toStartOf="parent" />
         <Constraint
-            android:id="@+id/recipe_img"
+            android:id="@+id/recipe_img_framelayout"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
         <Constraint
-            android:id="@+id/recipe_img"
+            android:id="@+id/recipe_img_framelayout"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_height="250dp"
             motion:layout_constraintTop_toTopOf="parent"
@@ -51,7 +51,7 @@
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
-            android:id="@+id/recipe_img"
+            android:id="@+id/recipe_img_framelayout"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
             android:layout_height="100dp"
@@ -71,7 +71,7 @@
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            motion:layout_constraintBottom_toBottomOf="@+id/recipe_img"
+            motion:layout_constraintBottom_toBottomOf="@+id/recipe_img_framelayout"
             motion:layout_constraintStart_toStartOf="parent"
             android:alpha="0" />
         <Constraint

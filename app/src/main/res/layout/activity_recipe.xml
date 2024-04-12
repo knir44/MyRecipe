@@ -1,50 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/motion_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/activity_recipe_scene"
     tools:context="com.tiodev.vegtummy.RecipeActivity">
 
-<FrameLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/recipe_img_framelayout">
-
-    <ImageView
-        android:id="@+id/recipe_img"
+    <FrameLayout
+        android:id="@+id/recipe_img_framelayout"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:background="#F6F6F6"
-        android:hapticFeedbackEnabled="true"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/pizza_sample" />
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie_image_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/loading_anim"
-        android:layout_gravity="center"/>
-
-    <ImageView
-        android:id="@+id/image_gradient"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:scaleType="centerCrop"
-        android:layout_gravity="bottom"
-        app:layout_constraintBottom_toBottomOf="@+id/recipe_img"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/image_btm_overlay" />
-</FrameLayout>
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/recipe_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/pizza_sample" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_image_loading"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:visibility="gone"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading_anim"
+            android:layout_gravity="center"/>
+
+        <ImageView
+            android:id="@+id/image_gradient"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="bottom"
+            app:srcCompat="@drawable/image_btm_overlay" />
+    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
