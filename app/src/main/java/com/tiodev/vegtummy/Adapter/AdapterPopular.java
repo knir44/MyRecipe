@@ -2,6 +2,8 @@ package com.tiodev.vegtummy.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.tiodev.vegtummy.Model.Recipe;
 import com.example.myrecipe.R;
 import com.tiodev.vegtummy.RecipeActivity;
@@ -40,13 +48,31 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.MyViewHo
 
         // Display cooking time
         Log.d("AdapterPopular", "Cooking time: " + recipe.getCookingTime());
-        holder.cookingTime.setText(recipe.getCookingTime());
+
+        // Start Lottie animation
+        holder.lottieImageLoading.setVisibility(View.VISIBLE);
 
         // Display Image
         Glide.with(holder.img.getContext())
                 .load(recipe.getImagePath())
-                .placeholder(R.drawable.popular_placeholder) // Ensure you have this drawable resource
-                .error(R.drawable.popular_placeholder) // Ensure you have this drawable resource
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, @NonNull Target<Drawable> target, boolean isFirstResource) {
+                        // Hide Lottie animation and show an error image
+                        holder.lottieImageLoading.setVisibility(View.GONE);
+                        holder.img.setImageResource(R.drawable.popular_placeholder);  // Update this as necessary
+                        return false; // Let Glide handle the error itself after this
+                    }
+
+                    @Override
+                    public boolean onResourceReady(@NonNull Drawable resource, @NonNull Object model, Target<Drawable> target, @NonNull DataSource dataSource, boolean isFirstResource) {
+                        // Hide Lottie animation
+                        holder.lottieImageLoading.setVisibility(View.GONE);
+                        return false; // Let Glide handle setting the image
+                    }
+                })
+                .placeholder(R.drawable.popular_placeholder)  // Optional: static placeholder
+                .error(R.drawable.popular_placeholder)          // Optional: static error image
                 .into(holder.img);
 
         // Set Title
@@ -56,7 +82,7 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.MyViewHo
         holder.img.setOnClickListener(v -> {
             Intent intent = new Intent(context, RecipeActivity.class);
             intent.putExtra("title", recipe.getTitle());
-            intent.putExtra("img", recipe.getImagePath().toString());
+            intent.putExtra("img", recipe.getImagePath());
             intent.putExtra("description", recipe.getDescription());
             intent.putExtra("ingredients", recipe.getIngredients());
             intent.putExtra("cookingTime", recipe.getCookingTime());
@@ -74,12 +100,14 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.MyViewHo
     static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
         TextView title, cookingTime;
+        LottieAnimationView lottieImageLoading;  // Reference to the Lottie view
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.popular_img);
             title = itemView.findViewById(R.id.popular_txt);
             cookingTime = itemView.findViewById(R.id.popular_time);
+            lottieImageLoading = itemView.findViewById(R.id.lottie_image_loading);
         }
     }
 }

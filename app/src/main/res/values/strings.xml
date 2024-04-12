@@ -12,6 +12,10 @@
     <string name="foodie">foodie!</string>
     <string name="add_photo" />
     <string name="cooking_time">Cooking Time</string>
+    <string name="selectedimage">selectedImage</string>
+    <string name="here_is_sample_text">Here is sample text</string>
+    <string name="_30_mins">30 mins</string>
+    <string name="popular_img">popular_img</string>
     <string-array name="recipe_categories">
         <item>Please choose a category</item>
         <item>Popular</item>

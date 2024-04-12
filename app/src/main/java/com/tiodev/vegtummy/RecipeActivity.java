@@ -1,18 +1,26 @@
 package com.tiodev.vegtummy;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
-import com.example.myrecipe.R; // Ensure this is your correct R class import
-import com.squareup.picasso.Picasso;
-import com.tiodev.vegtummy.Model.Recipe;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.example.myrecipe.R;
 
 
 public class RecipeActivity extends AppCompatActivity {
@@ -48,12 +56,31 @@ public class RecipeActivity extends AppCompatActivity {
         stepBtn.setBackground(null);
         stepBtn.setTextColor(getColor(R.color.textColor));
 
+        LottieAnimationView lottieImageLoading = findViewById(R.id.lottie_image_loading);
+
+        // Start with the animation view visible
+        lottieImageLoading.setVisibility(View.VISIBLE);
+
+
         /* Set the image - if the Uri is invalid or the image cannot be loaded, a placeholder based
         on the category will be displayed */
         String category = getIntent().getStringExtra("category");
         Glide.with(getApplicationContext())
                 .load(Uri.parse(getIntent().getStringExtra("img")))
-                .placeholder(getPlaceholderImage(category))
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, @NonNull Target<Drawable> target, boolean isFirstResource) {
+                        lottieImageLoading.setVisibility(View.GONE);  // Hide Lottie animation on load failure
+                        return false;  // let Glide handle the placeholder
+                    }
+
+                    @Override
+                    public boolean onResourceReady(@NonNull Drawable resource, @NonNull Object model, Target<Drawable> target, @NonNull DataSource dataSource, boolean isFirstResource) {
+                        lottieImageLoading.setVisibility(View.GONE);  // Hide Lottie animation on resource ready
+                        return false;  // let Glide display the image
+                    }
+                })
+                .placeholder(getPlaceholderImage(category))  // Continue using static placeholder if needed
                 .error(getPlaceholderImage(category))
                 .into(img);
 

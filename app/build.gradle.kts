@@ -34,26 +34,29 @@ android {
 
 dependencies {
 
-    implementation("com.google.firebase:firebase-firestore:24.11.0") // Check for the latest version
-    implementation("com.squareup.picasso:picasso:2.8")
-    implementation("com.airbnb.android:lottie:5.2.0") // Use the latest version
-    implementation ("de.hdodenhof:circleimageview:3.1.0")
-    implementation("com.google.android.material:material:1.11.0");
-
-    implementation("com.google.android.material:material")
-
-    implementation("com.google.firebase:firebase-storage:20.3.0")
-
-
+// Support and UI Libraries
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
-    implementation("com.google.firebase:firebase-analytics")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.google.firebase:firebase-database:20.3.1")
+    implementation("com.google.android.material:material:1.11.0")
+
+// Firebase Libraries
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0")) // Manages versions for Firebase libraries
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-database")
+
+// Image Loading Libraries
+    implementation("com.squareup.picasso:picasso:2.71828")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+// Third-Party UI Components
+    implementation("com.airbnb.android:lottie:6.4.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
+// Testing Libraries
     testImplementation("junit:junit:4.13.2")
-    implementation ("com.github.bumptech.glide:glide:4.13.0")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }

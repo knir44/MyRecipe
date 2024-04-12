@@ -21,14 +21,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
+        <ImageView
             android:id="@+id/img"
             android:layout_width="85dp"
             android:layout_height="85dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:src="@drawable/pizza_sample" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_image_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading_anim"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 
     </androidx.cardview.widget.CardView>
 
@@ -41,7 +55,7 @@
         android:fontFamily="@font/poppins_light"
         android:maxLength="40"
         android:maxLines="2"
-        android:text="Here is sample text"
+        android:text="@string/here_is_sample_text"
         android:textAllCaps="false"
         android:textColor="@color/textColor"
         android:textSize="16sp"
@@ -69,7 +83,7 @@
         android:layout_marginTop="4dp"
         android:textColor="@color/textColor"
         android:fontFamily="@font/poppins_light"
-        android:text="30 mins"
+        android:text="@string/_30_mins"
         app:layout_constraintBottom_toBottomOf="@+id/imageView3"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
         app:layout_constraintTop_toTopOf="@+id/imageView3" />

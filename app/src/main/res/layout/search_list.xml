@@ -17,6 +17,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/search_img"
             android:layout_width="64dp"
@@ -24,6 +28,17 @@
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:src="@drawable/catergory_drinks" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_image_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading_anim"
+            android:layout_gravity="center"/>
+        </FrameLayout>
 
     </androidx.cardview.widget.CardView>
 
