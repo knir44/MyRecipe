@@ -47,6 +47,7 @@ public class AdapterPopular extends RecyclerView.Adapter<AdapterPopular.MyViewHo
         final Recipe recipe = data.get(position);
 
         // Display cooking time
+        holder.cookingTime.setText(recipe.getCookingTime());
         Log.d("AdapterPopular", "Cooking time: " + recipe.getCookingTime());
 
         // Start Lottie animation
