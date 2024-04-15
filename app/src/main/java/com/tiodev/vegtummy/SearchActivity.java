@@ -82,8 +82,12 @@ public class SearchActivity extends AppCompatActivity {
     // Filter the searched item from all recipes
     public void filter(String text) {
         List<Recipe> filteredList = new ArrayList<>();
+        String searchText = text.toLowerCase(Locale.ROOT); // Convert search text to lower case once for efficiency
+
         for (Recipe recipe : allRecipes) {
-            if (recipe.getTitle().toLowerCase(Locale.ROOT).contains(text.toLowerCase(Locale.ROOT))) {
+            // Check if the title or the ingredients contain the search text
+            if (recipe.getTitle().toLowerCase(Locale.ROOT).contains(searchText) ||
+                    recipe.getIngredients().toLowerCase(Locale.ROOT).contains(searchText)) {
                 filteredList.add(recipe);
             }
         }
